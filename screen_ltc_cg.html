@@ -551,12 +551,12 @@
 
         // Submit Form
         document.getElementById('submitForm').addEventListener('submit', (e) => {
-            if (!confirm('ยืนยันการส่งแบบสอบถาม?')) {
+            if (!confirm('คุณต้องการส่งแบบสอบถามนี้ไปบันทึกหรือไม่?')) {
                 e.preventDefault();
                 console.log('Submission cancelled by user');
             } else {
-                console.log('Submitting form to:', appsScriptUrl);
-                alert('กำลังส่งแบบสอบถาม...');
+                console.log('User confirmed submission, sending form to:', appsScriptUrl);
+                alert('กำลังส่งแบบสอบถาม กรุณารอสักครู่...');
             }
         });
 
