@@ -68,7 +68,6 @@
         }
         .header-logo img {
             max-width: 100px;
-           恶意
             height: auto;
         }
         .bold-score {
@@ -181,7 +180,7 @@
                         <label class="form-check-label" for="single">โสด</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="mar artigianStatus" id="married" value="คู่">
+                        <input class="form-check-input" type="radio" name="maritalStatus" id="married" value="คู่">
                         <label class="form-check-label" for="married">คู่</label>
                     </div>
                     <div class="form-check">
@@ -421,7 +420,10 @@
         <div id="section7" class="form-container form-section hidden">
             <h3>ส่วนที่ 7: สรุปและยืนยัน</h3>
             <div id="summary" class="summary-container"></div>
-            <button type="button" class="btn btn-success mt-3" id="submitForm">ยืนยันและส่ง</button>
+            <form id="submitForm" method="POST" action="https://script.google.com/macros/s/AKfycbzkXtMr3C7zj3vh5CPg9pErrwJVjG4_Yo2zS2zvH2VPc8-82ZI6n3eUdcLWdd6d-L0zfw/exec">
+                <input type="hidden" name="formData" id="formDataInput">
+                <button type="submit" class="btn btn-success mt-3">ยืนยันและส่ง</button>
+            </form>
         </div>
         
         <!-- Navigation -->
@@ -512,6 +514,8 @@
                 summaryHtml += `<p>ส่วนที่ ${i}: คะแนน <span class="bold-score">${score}</span></p>`;
             }
             summaryDiv.innerHTML = summaryHtml;
+            // Prepare form data for submission
+            document.getElementById('formDataInput').value = JSON.stringify(formData);
         }
 
         // Navigation Buttons
@@ -538,29 +542,9 @@
         });
 
         // Submit Form
-        document.getElementById('submitForm').addEventListener('click', async () => {
-            if (confirm('ยืนยันการส่งแบบสอบถาม?')) {
-                try {
-                    console.log('Submitting form data:', JSON.stringify(formData));
-                    const response = await fetch(appsScriptUrl, {
-                        method: 'POST',
-                        body: JSON.stringify(formData),
-                        headers: { 'Content-Type': 'application/json' },
-                        mode: 'cors',
-                        credentials: 'omit'
-                    });
-                    const result = await response.json();
-                    if (result.status === 'success') {
-                        alert('ส่งแบบสอบถามสำเร็จ');
-                        liff.closeWindow();
-                    } else {
-                        console.error('Submission failed:', result.message);
-                        alert(`เกิดข้อผิดพลาด: ${result.message}`);
-                    }
-                } catch (err) {
-                    console.error('Fetch error:', err);
-                    alert(`เกิดข้อผิดพลาดในการเชื่อมต่อ: ${err.message}`);
-                }
+        document.getElementById('submitForm').addEventListener('submit', (e) => {
+            if (!confirm('ยืนยันการส่งแบบสอบถาม?')) {
+                e.preventDefault();
             }
         });
 
