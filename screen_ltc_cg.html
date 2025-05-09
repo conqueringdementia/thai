@@ -453,12 +453,12 @@
                     console.log('LIFF User ID:', userId);
                 }).catch(err => {
                     console.error('Error getting LIFF profile:', err);
-                    alert('ไม่สามารถดึงข้อมูลผู้ใช้ LINE ได้');
+                    alert('ไม่สามารถดึงข้อมูลผู้ใช้ LINE ได้: ' + err.message);
                 });
             }
         }).catch(err => {
             console.error('LIFF initialization failed:', err);
-            alert('ไม่สามารถเริ่มต้น LINE LIFF ได้');
+            alert('ไม่สามารถเริ่มต้น LINE LIFF ได้: ' + err.message);
         });
 
         // Show/Hide Sections
@@ -485,6 +485,7 @@
                 sectionData[key] = value;
             }
             formData[formId] = sectionData;
+            console.log(`Collected data for ${formId}:`, sectionData);
         }
 
         // Calculate Section Scores
@@ -515,7 +516,14 @@
             }
             summaryDiv.innerHTML = summaryHtml;
             // Prepare form data for submission
-            document.getElementById('formDataInput').value = JSON.stringify(formData);
+            try {
+                const formDataString = JSON.stringify(formData);
+                document.getElementById('formDataInput').value = formDataString;
+                console.log('Form data prepared for submission:', formDataString);
+            } catch (err) {
+                console.error('Error preparing form data:', err);
+                alert('เกิดข้อผิดพลาดในการเตรียมข้อมูล: ' + err.message);
+            }
         }
 
         // Navigation Buttons
@@ -545,6 +553,10 @@
         document.getElementById('submitForm').addEventListener('submit', (e) => {
             if (!confirm('ยืนยันการส่งแบบสอบถาม?')) {
                 e.preventDefault();
+                console.log('Submission cancelled by user');
+            } else {
+                console.log('Submitting form to:', appsScriptUrl);
+                alert('กำลังส่งแบบสอบถาม...');
             }
         });
 
