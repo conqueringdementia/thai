@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แบบคัดกรองภาวะสมองเสื่อมของผู้สูงอายุ</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <style>
         body {
             font-family: 'Sarabun', sans-serif;
@@ -87,9 +88,9 @@
             <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         
-        <!-- Section 1: ข้อมูลทั่วไป -->
+        <!-- Section 1: ข้อมูลทั่วไปและส่วนบุคคล -->
         <div id="section1" class="form-container form-section">
-            <h3>ส่วนที่ 1: ข้อมูลทั่วไป</h3>
+            <h3>ส่วนที่ 1: ข้อมูลทั่วไปและส่วนบุคคล</h3>
             <form id="form1">
                 <div class="row mb-3">
                     <div class="col-md-6">
@@ -133,6 +134,12 @@
                     <div class="col-md-6">
                         <label for="cgName" class="form-label">ชื่อ CG</label>
                         <input type="text" class="form-control" id="cgName" name="cgName" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="interviewDate" class="form-label">วันที่สัมภาษณ์</label>
+                        <input type="date" class="form-control" id="interviewDate" name="interviewDate" required>
                     </div>
                 </div>
                 <h4 class="mt-4">ข้อมูลส่วนบุคคลของผู้สูงอายุ</h4>
@@ -218,208 +225,378 @@
                         <input type="text" class="form-control" id="otherEducationText" name="otherEducationText" placeholder="ระบุการศึกษา">
                     </div>
                 </div>
-            </form>
-        </div>
-        
-        <!-- Section 2: ประวัติสุขภาพ -->
-        <div id="section2" class="form-container form-section hidden">
-            <h3>ส่วนที่ 2: ประวัติสุขภาพ</h3>
-            <form id="form2">
-                <div class="question-row">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span>โรคความดันโลหิตสูง</span>
-                        <div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="hypertension" id="noHypertension" value="0" required>
-                                <label class="form-check-label" for="noHypertension">ไม่เป็น</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="hypertension" id="yesHypertension" value="1">
-                                <label class="form-check-label" for="yesHypertension">เป็น</label>
-                            </div>
-                        </div>
+                <h4 class="mt-4">โรคเรื้อรัง</h4>
+                <div class="mb-3">
+                    <label class="form-label">6. โรคความดันโลหิตสูง</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="chronicHypertension" id="noChronicHypertension" value="0" required>
+                        <label class="form-check-label" for="noChronicHypertension">ไม่เป็น</label>
                     </div>
-                </div>
-                <div class="question-row">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span>โรคเบาหวาน</span>
-                        <div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="diabetes" id="noDiabetes" value="0" required>
-                                <label class="form-check-label" for="noDiabetes">ไม่เป็น</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="diabetes" id="yesDiabetes" value="1">
-                                <label class="form-check-label" for="yesDiabetes">เป็น</label>
-                            </div>
-                        </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="chronicHypertension" id="yesChronicHypertension" value="1">
+                        <label class="form-check-label" for="yesChronicHypertension">เป็น</label>
                     </div>
-                </div>
-                <div class="question-row">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <span>โรคหัวใจ</span>
-                        <div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="heartDisease" id="noHeartDisease" value="0" required>
-                                <label class="form-check-label" for="noHeartDisease">ไม่เป็น</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="heartDisease" id="yesHeartDisease" value="1">
-                                <label class="form-check-label" for="yesHeartDisease">เป็น</label>
-                            </div>
-                        </div>
+                    <div id="chronicHypertensionDurationDiv" class="mt-2 hidden">
+                        <label for="chronicHypertensionDuration" class="form-label">ระยะเวลา (ปี)</label>
+                        <input type="number" class="form-control" id="chronicHypertensionDuration" name="chronicHypertensionDuration" min="0">
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">ประวัติการสูบบุหรี่</label>
+                    <label class="form-label">7. โรคเบาหวาน</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="smoking" id="neverSmoked" value="ไม่เคยสูบ" required>
-                        <label class="form-check-label" for="neverSmoked">ไม่เคยสูบ</label>
+                        <input class="form-check-input" type="radio" name="chronicDiabetes" id="noChronicDiabetes" value="0" required>
+                        <label class="form-check-label" for="noChronicDiabetes">ไม่เป็น</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="smoking" id="quitSmoking" value="เคยสูบแต่เลิกแล้ว">
-                        <label class="form-check-label" for="quitSmoking">เคยสูบแต่เลิกแล้ว</label>
+                        <input class="form-check-input" type="radio" name="chronicDiabetes" id="yesChronicDiabetes" value="1">
+                        <label class="form-check-label" for="yesChronicDiabetes">เป็น</label>
+                    </div>
+                    <div id="chronicDiabetesDurationDiv" class="mt-2 hidden">
+                        <label for="chronicDiabetesDuration" class="form-label">ระยะเวลา (ปี)</label>
+                        <input type="number" class="form-control" id="chronicDiabetesDuration" name="chronicDiabetesDuration" min="0">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">8. โรคหัวใจ</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="chronicHeartDisease" id="noChronicHeartDisease" value="0" required>
+                        <label class="form-check-label" for="noChronicHeartDisease">ไม่เป็น</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="smoking" id="currentlySmoking" value="ยังสูบอยู่">
-                        <label class="form-check-label" for="currentlySmoking">ยังสูบอยู่</label>
+                        <input class="form-check-input" type="radio" name="chronicHeartDisease" id="yesChronicHeartDisease" value="1">
+                        <label class="form-check-label" for="yesChronicHeartDisease">เป็น</label>
+                    </div>
+                    <div id="chronicHeartDiseaseDurationDiv" class="mt-2 hidden">
+                        <label for="chronicHeartDiseaseDuration" class="form-label">ระยะเวลา (ปี)</label>
+                        <input type="number" class="form-control" id="chronicHeartDiseaseDuration" name="chronicHeartDiseaseDuration" min="0">
                     </div>
                 </div>
             </form>
         </div>
         
-        <!-- Section 3: การประเมินความรู้ความเข้าใจ -->
+        <!-- Section 2: ภาวะสุขภาพผู้สูงอายุ -->
+        <div id="section2" class="form-container form-section hidden">
+            <h3>ส่วนที่ 2: ภาวะสุขภาพผู้สูงอายุ</h3>
+            <form id="form2">
+                <div class="question-row">
+                    <label class="form-label">1. ในช่วง 1 เดือนที่ผ่านมา ผู้สูงอายุต้องนอนบนเตียงเป็นส่วนใหญ่หรือไม่</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bedridden" id="noBedridden" value="0" required>
+                        <label class="form-check-label" for="noBedridden">ไม่มี</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="bedridden" id="yesBedridden" value="1">
+                        <label class="form-check-label" for="yesBedridden">มี</label>
+                    </div>
+                    <div id="bedriddenDaysDiv" class="mt-2 hidden">
+                        <label for="bedriddenDays" class="form-label">จำนวนวัน</label>
+                        <input type="number" class="form-control" id="bedriddenDays" name="bedriddenDays" min="1" max="31">
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">2. ในช่วง 1 เดือนที่ผ่านมา ผู้สูงอายุมีการหกล้มหรือไม่</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="fall" id="noFall" value="0" required>
+                        <label class="form-check-label" for="noFall">ไม่มี</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="fall" id="yesFall" value="1">
+                        <label class="form-check-label" for="yesFall">มี</label>
+                    </div>
+                    <div id="fallTimesDiv" class="mt-2 hidden">
+                        <label for="fallTimes" class="form-label">จำนวนครั้ง</label>
+                        <input type="number" class="form-control" id="fallTimes" name="fallTimes" min="1">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="bloodSugar" class="form-label">3. ระดับน้ำตาลในเลือด (มก./ดล.)</label>
+                    <input type="number" class="form-control" id="bloodSugar" name="bloodSugar" min="0">
+                </div>
+                <div class="row mb-3">
+                    <label class="form-label">4. ระดับความดันโลหิต (มม.ปรอท)</label>
+                    <div class="col-md-6">
+                        <label for="bloodPressureSystolic" class="form-label">Systolic</label>
+                        <input type="number" class="form-control" id="bloodPressureSystolic" name="bloodPressureSystolic" min="0">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="bloodPressureDiastolic" class="form-label">Diastolic</label>
+                        <input type="number" class="form-control" id="bloodPressureDiastolic" name="bloodPressureDiastolic" min="0">
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="weight" class="form-label">5. น้ำหนัก (กิโลกรัม)</label>
+                        <input type="number" class="form-control" id="weight" name="weight" min="0" step="0.1">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="height" class="form-label">6. ส่วนสูง (เซนติเมตร)</label>
+                        <input type="number" class="form-control" id="height" name="height" min="0" step="0.1">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="waist" class="form-label">7. รอบเอว (เซนติเมตร)</label>
+                    <input type="number" class="form-control" id="waist" name="waist" min="0" step="0.1">
+                </div>
+            </form>
+        </div>
+        
+        <!-- Section 3: แบบคัดกรองสมรรถภาพความจำ 14 คำถาม -->
         <div id="section3" class="form-container form-section hidden">
-            <h3>ส่วนที่ 3: การประเมินความรู้ความเข้าใจ</h3>
+            <h3>ส่วนที่ 3: แบบคัดกรองสมรรถภาพความจำ 14 คำถาม</h3>
             <form id="form3">
                 <div class="question-row">
-                    <label class="form-label">1. วันนี้เป็นวันอะไร</label>
+                    <label class="form-label">1. ผู้สูงอายุรู้วันนี้เป็นวันอะไร</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="day" id="correctDay" value="1" required>
-                        <label class="form-check-label" for="correctDay">ตอบถูก</label>
+                        <input class="form-check-input" type="radio" name="memory1" id="memory1Correct" value="1" required>
+                        <label class="form-check-label" for="memory1Correct">รู้</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="day" id="incorrectDay" value="0">
-                        <label class="form-check-label" for="incorrectDay">ตอบผิด</label>
-                    </div>
-                </div>
-                <div class="question-row">
-                    <label class="form-label">2. ปีนี้คือปี พ.ศ. อะไร</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="year" id="correctYear" value="1" required>
-                        <label class="form-check-label" for="correctYear">ตอบถูก</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="year" id="incorrectYear" value="0">
-                        <label class="form-check-label" for="incorrectYear">ตอบผิด</label>
+                        <input class="form-check-input" type="radio" name="memory1" id="memory1Incorrect" value="0">
+                        <label class="form-check-label" for="memory1Incorrect">ไม่รู้</label>
                     </div>
                 </div>
                 <div class="question-row">
-                    <label class="form-label">3. สามารถจำชื่อบุคคลในครอบครัวได้</label>
+                    <label class="form-label">2. ผู้สูงอายุรู้ปีนี้คือปีอะไร</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="memory" id="goodMemory" value="1" required>
-                        <label class="form-check-label" for="goodMemory">จำได้</label>
+                        <input class="form-check-input" type="radio" name="memory2" id="memory2Correct" value="1" required>
+                        <label class="form-check-label" for="memory2Correct">รู้</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="memory" id="poorMemory" value="0">
-                        <label class="form-check-label" for="poorMemory">จำไม่ได้</label>
+                        <input class="form-check-input" type="radio" name="memory2" id="memory2Incorrect" value="0">
+                        <label class="form-check-label" for="memory2Incorrect">ไม่รู้</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">3. ผู้สูงอายุจำชื่อสมาชิกในครอบครัวได้</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory3" id="memory3Correct" value="1" required>
+                        <label class="form-check-label" for="memory3Correct">จำได้</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory3" id="memory3Incorrect" value="0">
+                        <label class="form-check-label" for="memory3Incorrect">จำไม่ได้</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">4. ผู้สูงอายุรู้สถานที่ที่ตนเองอยู่</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory4" id="memory4Correct" value="1" required>
+                        <label class="form-check-label" for="memory4Correct">รู้</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory4" id="memory4Incorrect" value="0">
+                        <label class="form-check-label" for="memory4Incorrect">ไม่รู้</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">5. ผู้สูงอายุจำเหตุการณ์ล่าสุดได้</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory5" id="memory5Correct" value="1" required>
+                        <label class="form-check-label" for="memory5Correct">จำได้</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory5" id="memory5Incorrect" value="0">
+                        <label class="form-check-label" for="memory5Incorrect">จำไม่ได้</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">6. ผู้สูงอายุสามารถนับเลขถอยหลังจาก 10 ได้</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory6" id="memory6Correct" value="1" required>
+                        <label class="form-check-label" for="memory6Correct">ได้</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory6" id="memory6Incorrect" value="0">
+                        <label class="form-check-label" for="memory6Incorrect">ไม่ได้</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">7. ผู้สูงอายุจำวันเกิดของตนเองได้</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory7" id="memory7Correct" value="1" required>
+                        <label class="form-check-label" for="memory7Correct">จำได้</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory7" id="memory7Incorrect" value="0">
+                        <label class="form-check-label" for="memory7Incorrect">จำไม่ได้</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">8. ผู้สูงอายุรู้ชื่อผู้นำประเทศ</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory8" id="memory8Correct" value="1" required>
+                        <label class="form-check-label" for="memory8Correct">รู้</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory8" id="memory8Incorrect" value="0">
+                        <label class="form-check-label" for="memory8Incorrect">ไม่รู้</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">9. ผู้สูงอายุสามารถระบุฤดูกาลได้</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory9" id="memory9Correct" value="1" required>
+                        <label class="form-check-label" for="memory9Correct">ได้</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory9" id="memory9Incorrect" value="0">
+                        <label class="form-check-label" for="memory9Incorrect">ไม่ได้</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">10. ผู้สูงอายุจำชื่อสิ่งของที่ใช้ประจำได้</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory10" id="memory10Correct" value="1" required>
+                        <label class="form-check-label" for="memory10Correct">จำได้</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory10" id="memory10Incorrect" value="0">
+                        <label class="form-check-label" for="memory10Incorrect">จำไม่ได้</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">11. ผู้สูงอายุรู้เวลาปัจจุบันโดยประมาณ</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory11" id="memory11Correct" value="1" required>
+                        <label class="form-check-label" for="memory11Correct">รู้</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory11" id="memory11Incorrect" value="0">
+                        <label class="form-check-label" for="memory11Incorrect">ไม่รู้</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">12. ผู้สูงอายุสามารถทำตามคำสั่งง่ายๆ ได้</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory12" id="memory12Correct" value="1" required>
+                        <label class="form-check-label" for="memory12Correct">ได้</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory12" id="memory12Incorrect" value="0">
+                        <label class="form-check-label" for="memory12Incorrect">ไม่ได้</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">13. ผู้สูงอายุจำชื่อสถานที่สำคัญในชุมชนได้</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory13" id="memory13Correct" value="1" required>
+                        <label class="form-check-label" for="memory13Correct">จำได้</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory13" id="memory13Incorrect" value="0">
+                        <label class="form-check-label" for="memory13Incorrect">จำไม่ได้</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">14. ผู้สูงอายุรู้จักสีพื้นฐาน</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory14" id="memory14Correct" value="1" required>
+                        <label class="form-check-label" for="memory14Correct">รู้จัก</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="memory14" id="memory14Incorrect" value="0">
+                        <label class="form-check-label" for="memory14Incorrect">ไม่รู้จัก</label>
                     </div>
                 </div>
             </form>
         </div>
         
-        <!-- Section 4: การประเมินการทำงานในชีวิตประจำวัน -->
+        <!-- Section 4: การประเมินพฤติกรรมผู้สูงอายุ (NPI-Q) -->
         <div id="section4" class="form-container form-section hidden">
-            <h3>ส่วนที่ 4: การประเมินการทำงานในชีวิตประจำวัน</h3>
+            <h3>ส่วนที่ 4: การประเมินพฤติกรรมผู้สูงอายุ (NPI-Q)</h3>
             <form id="form4">
                 <div class="question-row">
-                    <label class="form-label">1. สามารถรับประทานอาหารด้วยตนเอง</label>
+                    <label class="form-label">1. มีอาการหลงผิด (เช่น คิดว่ามีคนขโมยของ)</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="eating" id="independentEating" value="2" required>
-                        <label class="form-check-label" for="independentEating">ทำได้เอง</label>
+                        <input class="form-check-input" type="radio" name="delusion" id="noDelusion" value="0" required>
+                        <label class="form-check-label" for="noDelusion">ไม่มี</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="eating" id="assistedEating" value="1">
-                        <label class="form-check-label" for="assistedEating">ต้องช่วยบางส่วน</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="eating" id="dependentEating" value="0">
-                        <label class="form-check-label" for="dependentEating">ทำไม่ได้</label>
+                        <input class="form-check-input" type="radio" name="delusion" id="yesDelusion" value="1">
+                        <label class="form-check-label" for="yesDelusion">มี</label>
                     </div>
                 </div>
                 <div class="question-row">
-                    <label class="form-label">2. สามารถอาบน้ำด้วยตนเอง</label>
+                    <label class="form-label">2. มีอาการประสาทหลอน (เช่น เห็นหรือได้ยินสิ่งที่ไม่มีจริง)</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="bathing" id="independentBathing" value="2" required>
-                        <label class="form-check-label" for="independentBathing">ทำได้เอง</label>
+                        <input class="form-check-input" type="radio" name="hallucination" id="noHallucination" value="0" required>
+                        <label class="form-check-label" for="noHallucination">ไม่มี</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="bathing" id="assistedBathing" value="1">
-                        <label class="form-check-label" for="assistedBathing">ต้องช่วยบางส่วน</label>
+                        <input class="form-check-input" type="radio" name="hallucination" id="yesHallucination" value="1">
+                        <label class="form-check-label" for="yesHallucination">มี</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">3. มีพฤติกรรมก้าวร้าวหรือหงุดหงิด</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="agitation" id="noAgitation" value="0" required>
+                        <label class="form-check-label" for="noAgitation">ไม่มี</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="bathing" id="dependentBathing" value="0">
-                        <label class="form-check-label" for="dependentBathing">ทำไม่ได้</label>
+                        <input class="form-check-input" type="radio" name="agitation" id="yesAgitation" value="1">
+                        <label class="form-check-label" for="yesAgitation">มี</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">4. มีอาการซึมเศร้า</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="npiDepression" id="noNpiDepression" value="0" required>
+                        <label class="form-check-label" for="noNpiDepression">ไม่มี</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="npiDepression" id="yesNpiDepression" value="1">
+                        <label class="form-check-label" for="yesNpiDepression">มี</label>
+                    </div>
+                </div>
+                <div class="question-row">
+                    <label class="form-label">5. มีอาการวิตกกังวล</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="anxiety" id="noAnxiety" value="0" required>
+                        <label class="form-check-label" for="noAnxiety">ไม่มี</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="anxiety" id="yesAnxiety" value="1">
+                        <label class="form-check-label" for="yesAnxiety">มี</label>
                     </div>
                 </div>
             </form>
         </div>
         
-        <!-- Section 5: การประเมินพฤติกรรมและอารมณ์ -->
+        <!-- Section 5: แบบคัดกรองภาวะซึมเศร้า (2Q) -->
         <div id="section5" class="form-container form-section hidden">
-            <h3>ส่วนที่ 5: การประเมินพฤติกรรมและอารมณ์</h3>
+            <h3>ส่วนที่ 5: แบบคัดกรองภาวะซึมเศร้า (2Q)</h3>
             <form id="form5">
                 <div class="question-row">
-                    <label class="form-label">1. มีอาการซึมเศร้าบ่อยครั้ง</label>
+                    <label class="form-label">1. ในช่วง 2 สัปดาห์ที่ผ่านมา ผู้สูงอายุรู้สึกหดหู่ ซึมเศร้า หรือสิ้นหวังหรือไม่</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="depression" id="noDepression" value="0" required>
-                        <label class="form-check-label" for="noDepression">ไม่มี</label>
+                        <input class="form-check-input" type="radio" name="depression1" id="noDepression1" value="0" required>
+                        <label class="form-check-label" for="noDepression1">ไม่มี</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="depression" id="yesDepression" value="1">
-                        <label class="form-check-label" for="yesDepression">มี</label>
+                        <input class="form-check-input" type="radio" name="depression1" id="yesDepression1" value="1">
+                        <label class="form-check-label" for="yesDepression1">มี</label>
                     </div>
                 </div>
                 <div class="question-row">
-                    <label class="form-label">2. มีพฤติกรรมก้าวร้าว</label>
+                    <label class="form-label">2. ในช่วง 2 สัปดาห์ที่ผ่านมา ผู้สูงอายุรู้สึกเบื่อหน่าย ไม่สนใจ หรือไม่มีความสุขในสิ่งที่เคยชอบหรือไม่</label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="aggression" id="noAggression" value="0" required>
-                        <label class="form-check-label" for="noAggression">ไม่มี</label>
+                        <input class="form-check-input" type="radio" name="depression2" id="noDepression2" value="0" required>
+                        <label class="form-check-label" for="noDepression2">ไม่มี</label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="aggression" id="yesAggression" value="1">
-                        <label class="form-check-label" for="yesAggression">มี</label>
+                        <input class="form-check-input" type="radio" name="depression2" id="yesDepression2" value="1">
+                        <label class="form-check-label" for="yesDepression2">มี</label>
                     </div>
                 </div>
             </form>
         </div>
         
-        <!-- Section 6: ภาระผู้ดูแล -->
+        <!-- Section 6: สรุปและยืนยัน -->
         <div id="section6" class="form-container form-section hidden">
-            <h3>ส่วนที่ 6: ภาระผู้ดูแล</h3>
-            <form id="form6">
-                <div class="question-row">
-                    <label class="form-label">1. รู้สึกเครียดจากการดูแล</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="caregiverStress" id="noStress" value="0" required>
-                        <label class="form-check-label" for="noStress">ไม่เครียด</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="caregiverStress" id="mildStress" value="1">
-                        <label class="form-check-label" for="mildStress">เครียดเล็กน้อย</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="caregiverStress" id="highStress" value="2">
-                        <label class="form-check-label" for="highStress">เครียดมาก</label>
-                    </div>
-                </div>
-            </form>
-        </div>
-        
-        <!-- Section 7: สรุปและยืนยัน -->
-        <div id="section7" class="form-container form-section hidden">
-            <h3>ส่วนที่ 7: สรุปและยืนยัน</h3>
+            <h3>ส่วนที่ 6: สรุปและยืนยัน</h3>
             <div id="summary" class="summary-container"></div>
+            <p class="text-muted">กรุณาตรวจสอบข้อมูลให้ครบถ้วนก่อนกดยืนยัน ระบบจะบันทึกข้อมูลลงฐานข้อมูล</p>
             <form id="submitForm" method="POST" action="https://script.google.com/macros/s/AKfycbzkXtMr3C7zj3vh5CPg9pErrwJVjG4_Yo2zS2zvH2VPc8-82ZI6n3eUdcLWdd6d-L0zfw/exec">
                 <input type="hidden" name="formData" id="formDataInput">
                 <button type="submit" class="btn btn-success mt-3">ยืนยันและส่ง</button>
@@ -435,9 +612,10 @@
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         let currentSection = 1;
-        const totalSections = 7;
+        const totalSections = 6;
         let userId = '';
         const formData = {};
         const appsScriptUrl = 'https://script.google.com/macros/s/AKfycbzkXtMr3C7zj3vh5CPg9pErrwJVjG4_Yo2zS2zvH2VPc8-82ZI6n3eUdcLWdd6d-L0zfw/exec';
@@ -453,12 +631,20 @@
                     console.log('LIFF User ID:', userId);
                 }).catch(err => {
                     console.error('Error getting LIFF profile:', err);
-                    alert('ไม่สามารถดึงข้อมูลผู้ใช้ LINE ได้: ' + err.message);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ข้อผิดพลาด',
+                        text: 'ไม่สามารถดึงข้อมูลผู้ใช้ LINE ได้: ' + err.message
+                    });
                 });
             }
         }).catch(err => {
             console.error('LIFF initialization failed:', err);
-            alert('ไม่สามารถเริ่มต้น LINE LIFF ได้: ' + err.message);
+            Swal.fire({
+                icon: 'error',
+                title: 'ข้อผิดพลาด',
+                text: 'ไม่สามารถเริ่มต้น LINE LIFF ได้: ' + err.message
+            });
         });
 
         // Show/Hide Sections
@@ -492,16 +678,19 @@
         function calculateSectionScore(formId) {
             const data = formData[formId] || {};
             let score = 0;
-            if (formId === 'form2') {
-                score += parseInt(data.hypertension || 0) + parseInt(data.diabetes || 0) + parseInt(data.heartDisease || 0);
+            if (formId === 'form1') {
+                score += parseInt(data.chronicHypertension || 0) + parseInt(data.chronicDiabetes || 0) + parseInt(data.chronicHeartDisease || 0);
+            } else if (formId === 'form2') {
+                score += parseInt(data.bedridden || 0) + parseInt(data.fall || 0);
             } else if (formId === 'form3') {
-                score += parseInt(data.day || 0) + parseInt(data.year || 0) + parseInt(data.memory || 0);
+                for (let i = 1; i <= 14; i++) {
+                    score += parseInt(data[`memory${i}`] || 0);
+                }
             } else if (formId === 'form4') {
-                score += parseInt(data.eating || 0) + parseInt(data.bathing || 0);
+                score += parseInt(data.delusion || 0) + parseInt(data.hallucination || 0) + parseInt(data.agitation || 0) +
+                         parseInt(data.npiDepression || 0) + parseInt(data.anxiety || 0);
             } else if (formId === 'form5') {
-                score += parseInt(data.depression || 0) + parseInt(data.aggression || 0);
-            } else if (formId === 'form6') {
-                score += parseInt(data.caregiverStress || 0);
+                score += parseInt(data.depression1 || 0) + parseInt(data.depression2 || 0);
             }
             return score;
         }
@@ -510,21 +699,43 @@
         function showSummary() {
             const summaryDiv = document.getElementById('summary');
             let summaryHtml = '<h4>สรุปผล</h4>';
-            for (let i = 1; i <= 6; i++) {
+            for (let i = 1; i <= 5; i++) {
                 const score = calculateSectionScore(`form${i}`);
                 summaryHtml += `<p>ส่วนที่ ${i}: คะแนน <span class="bold-score">${score}</span></p>`;
             }
             summaryDiv.innerHTML = summaryHtml;
-            // Prepare form data for submission
             try {
                 const formDataString = JSON.stringify(formData);
                 document.getElementById('formDataInput').value = formDataString;
                 console.log('Form data prepared for submission:', formDataString);
             } catch (err) {
                 console.error('Error preparing form data:', err);
-                alert('เกิดข้อผิดพลาดในการเตรียมข้อมูล: ' + err.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ข้อผิดพลาด',
+                    text: 'เกิดข้อผิดพลาดในการเตรียมข้อมูล: ' + err.message
+                });
             }
         }
+
+        // Toggle Conditional Fields
+        document.querySelectorAll('input[type="radio"]').forEach(input => {
+            input.addEventListener('change', (e) => {
+                const name = e.target.name;
+                const value = e.target.value;
+                if (name === 'chronicHypertension') {
+                    document.getElementById('chronicHypertensionDurationDiv').classList.toggle('hidden', value === '0');
+                } else if (name === 'chronicDiabetes') {
+                    document.getElementById('chronicDiabetesDurationDiv').classList.toggle('hidden', value === '0');
+                } else if (name === 'chronicHeartDisease') {
+                    document.getElementById('chronicHeartDiseaseDurationDiv').classList.toggle('hidden', value === '0');
+                } else if (name === 'bedridden') {
+                    document.getElementById('bedriddenDaysDiv').classList.toggle('hidden', value === '0');
+                } else if (name === 'fall') {
+                    document.getElementById('fallTimesDiv').classList.toggle('hidden', value === '0');
+                }
+            });
+        });
 
         // Navigation Buttons
         document.getElementById('prevBtn').addEventListener('click', () => {
@@ -545,18 +756,70 @@
                     }
                 } else {
                     document.getElementById(`form${currentSection}`).reportValidity();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'กรุณากรอกข้อมูลให้ครบถ้วน',
+                        text: 'โปรดตรวจสอบและกรอกข้อมูลที่จำเป็นทั้งหมด'
+                    });
                 }
             }
         });
 
         // Submit Form
-        document.getElementById('submitForm').addEventListener('submit', (e) => {
-            if (!confirm('คุณต้องการส่งแบบสอบถามนี้ไปบันทึกหรือไม่?')) {
-                e.preventDefault();
-                console.log('Submission cancelled by user');
-            } else {
+        document.getElementById('submitForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const result = await Swal.fire({
+                title: 'ยืนยันการส่งข้อมูล',
+                text: 'คุณต้องการส่งแบบสอบถามนี้ไปบันทึกหรือไม่?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'ส่งข้อมูล',
+                cancelButtonText: 'ยกเลิก'
+            });
+            if (result.isConfirmed) {
                 console.log('User confirmed submission, sending form to:', appsScriptUrl);
-                alert('กำลังส่งแบบสอบถาม กรุณารอสักครู่...');
+                Swal.fire({
+                    title: 'กำลังส่งข้อมูล...',
+                    text: 'กรุณารอสักครู่',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                const form = document.getElementById('submitForm');
+                fetch(appsScriptUrl, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    mode: 'no-cors'
+                }).then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ส่งข้อมูลสำเร็จ',
+                        text: 'แบบสอบถามถูกบันทึกเรียบร้อยแล้ว',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        if (window.liff) {
+                            window.liff.closeWindow();
+                        } else {
+                            window.location.href = 'https://liff.line.me/2007308455-on3Xdl8x';
+                        }
+                    });
+                }).catch(err => {
+                    console.error('Submission error:', err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ข้อผิดพลาด',
+                        text: 'เกิดข้อผิดพลาดในการส่งข้อมูล: ' + err.message
+                    });
+                });
+            } else {
+                console.log('Submission cancelled by user');
+                Swal.fire({
+                    icon: 'info',
+                    title: 'ยกเลิก',
+                    text: 'การส่งข้อมูลถูกยกเลิก'
+                });
             }
         });
 
