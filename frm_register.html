@@ -3,166 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ลงทะเบียนผู้ใช้</title>
+    <title>ระบบลงทะเบียนผู้ใช้</title>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        h1, h2, h3, label, button {
-            font-family: 'Kanit', sans-serif;
-            color: #003366;
-        }
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             font-family: 'Kanit', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             min-height: 100vh;
         }
-        .container {
-            max-width: 400px;
+        .card {
             background: white;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             border-radius: 15px;
-            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
-            margin: 20px auto;
         }
-        .container:hover {
+        .card:hover {
             box-shadow: 0 15px 30px rgba(0,0,0,0.2);
             transform: translateY(-5px);
         }
         .profile-section {
             background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
             color: white;
         }
-        #profileImage {
-            border: 3px solid white;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        .btn-primary {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
             transition: all 0.3s ease;
         }
-        #profileImage:hover {
-            transform: scale(1.05);
-        }
-        .time-display {
-            background-color: rgba(0,0,0,0.2);
-            color: white;
-            padding: 8px 12px;
-            border-radius: 20px;
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            display: none;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
         }
         .loading-spinner {
             border: 5px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
             border-top: 5px solid #4facfe;
-            width: 50px;
-            height: 50px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        input, select {
-            border-radius: 10px !important;
-            border: 1px solid #ddd;
-            transition: all 0.3s ease;
-        }
-        input:focus, select:focus {
-            border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
-        }
-        button {
-            color: white;
-            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%) !important;
-            border: none;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
-        }
-        button:active {
-            transform: translateY(0);
-        }
-        .form-group {
-            margin-bottom: 1.25rem;
-        }
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: #4a5568;
-        }
     </style>
 </head>
 <body class="flex items-center justify-center p-4">
-    <div class="container">
-        <!-- Header -->
-        <div class="text-center py-6 bg-gradient-to-r from-blue-500 to-cyan-400">
+    <div class="card w-full max-w-md">
+        <!-- ส่วนหัว -->
+        <div class="text-center py-6 bg-gradient-to-r from-blue-500 to-cyan-400 rounded-t-lg">
             <h1 class="text-2xl font-bold text-white">ลงทะเบียนผู้ใช้</h1>
         </div>
 
-        <!-- Profile Section -->
-        <div class="profile-section">
+        <!-- ส่วนโปรไฟล์ -->
+        <div class="profile-section p-5 flex items-center justify-between">
             <div class="flex items-center">
-                <img id="profileImage" src="https://cdn.pixabay.com/animation/2022/11/04/09/42/09-42-03-510_512.gif" alt="Profile" class="w-16 h-16 rounded-full mr-4">
+                <img id="profileImage" src="https://cdn.pixabay.com/animation/2022/11/04/09/42/09-42-03-510_512.gif" 
+                     class="w-16 h-16 rounded-full border-4 border-white shadow-md mr-4">
                 <div>
-                    <h4 id="displayName" class="text-lg font-medium">Loading...</h4>
-                    <p id="statusMessage" class="text-sm opacity-80">Loading status...</p>
-                    <span id="userStatus" class="inline-block px-2 py-1 text-xs bg-white bg-opacity-20 rounded-full mt-1">Online</span>
+                    <h4 id="displayName" class="text-lg font-medium">กำลังโหลด...</h4>
+                    <p id="statusMessage" class="text-sm opacity-80">สถานะ: โหลดข้อมูล</p>
                 </div>
             </div>
-            <div id="timeDisplay" class="time-display">
+            <div id="timeDisplay" class="bg-black bg-opacity-20 text-white px-3 py-1 rounded-full text-sm">
                 00:00:00
             </div>
         </div>
 
-        <!-- Registration Form -->
+        <!-- ฟอร์มลงทะเบียน -->
         <div class="p-6">
             <form id="registrationForm">
-                <div class="form-group">
-                    <label for="userId">User ID</label>
-                    <input type="text" id="userId" class="w-full py-2 px-4 border focus:outline-none" readonly>
+                <div class="mb-4">
+                    <label for="userId" class="block text-gray-700 text-sm font-medium mb-2">User ID</label>
+                    <input type="text" id="userId" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" readonly>
                 </div>
                 
-                <div class="form-group">
-                    <label for="firstName">ชื่อ</label>
-                    <input type="text" id="firstName" class="w-full py-2 px-4 border focus:outline-none" required>
+                <div class="mb-4">
+                    <label for="firstName" class="block text-gray-700 text-sm font-medium mb-2">ชื่อ</label>
+                    <input type="text" id="firstName" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" required>
                 </div>
                 
-                <div class="form-group">
-                    <label for="lastName">นามสกุล</label>
-                    <input type="text" id="lastName" class="w-full py-2 px-4 border focus:outline-none" required>
+                <div class="mb-4">
+                    <label for="lastName" class="block text-gray-700 text-sm font-medium mb-2">นามสกุล</label>
+                    <input type="text" id="lastName" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" required>
                 </div>
                 
-                <div class="form-group">
-                    <label for="position">ปฏิบัติหน้าที่เป็น</label>
-                    <select id="position" class="w-full py-2 px-4 border focus:outline-none" required>
+                <div class="mb-4">
+                    <label for="position" class="block text-gray-700 text-sm font-medium mb-2">ปฏิบัติหน้าที่เป็น</label>
+                    <select id="position" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" required>
                         <option value="FCG" selected>ผู้ดูแลในครอบครัว</option>
                         <option value="CG">CG</option>
                         <option value="CM">CM</option>
@@ -170,13 +97,13 @@
                     </select>
                 </div>
                 
-                <div class="form-group">
-                    <label for="department">ขึ้นตรงหน่วยงาน(ชื่อ รพ.)</label>
-                    <input type="text" id="department" class="w-full py-2 px-4 border focus:outline-none" required>
+                <div class="mb-4">
+                    <label for="department" class="block text-gray-700 text-sm font-medium mb-2">ขึ้นตรงหน่วยงาน(ชื่อ รพ.)</label>
+                    <input type="text" id="department" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300" required>
                 </div>
                 
-                <div class="mt-8">
-                    <button type="submit" id="submitBtn" class="w-full py-3 px-4 rounded-lg">
+                <div class="mt-6">
+                    <button type="submit" id="submitBtn" class="btn-primary w-full py-3 px-4 rounded-lg text-white font-bold">
                         ลงทะเบียน
                     </button>
                 </div>
@@ -185,254 +112,47 @@
     </div>
 
     <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay">
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 hidden">
         <div class="text-center">
-            <div class="loading-spinner mb-4"></div>
+            <div class="loading-spinner w-12 h-12 rounded-full mb-4 mx-auto"></div>
             <p class="text-white font-medium">กำลังประมวลผล...</p>
         </div>
     </div>
 
     <script>
-        const liffId = '2007308455-419pPMV6';
-        const googleSheetScriptUrl = 'https://script.google.com/macros/s/AKfycbw7KGYJaz0BnamDyVXgoDM-nyw2wFHLnQ8b3sZM9vCStNVB2yqhxuya3GD7CQKGUDEczw/exec';
-
-        // ตัวแปรสำหรับตรวจสอบสถานะ
+        // ค่าคงที่
+        const LIFF_ID = '2007308455-419pPMV6';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw7KGYJaz0BnamDyVXgoDM-nyw2wFHLnQ8b3sZM9vCStNVB2yqhxuya3GD7CQKGUDEczw/exec';
+        
+        // ตัวแปรสถานะ
         let isSubmitting = false;
 
+        // ฟังก์ชันแสดงเวลา
         function updateTime() {
             const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('timeDisplay').textContent = `${hours}:${minutes}:${seconds}`;
+            const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
+            document.getElementById('timeDisplay').textContent = timeStr;
         }
-
-        setInterval(updateTime, 1000);
-        updateTime();
-
+        
+        // ฟังก์ชันแสดง Loading
         function showLoading() {
-            document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('loadingOverlay').classList.remove('hidden');
             document.getElementById('submitBtn').disabled = true;
             isSubmitting = true;
         }
-
+        
+        // ฟังก์ชันซ่อน Loading
         function hideLoading() {
-            document.getElementById('loadingOverlay').style.display = 'none';
+            document.getElementById('loadingOverlay').classList.add('hidden');
             document.getElementById('submitBtn').disabled = false;
             isSubmitting = false;
         }
 
-        async function initializeLiff() {
-            try {
-                await liff.init({ liffId: liffId });
-                if (liff.isLoggedIn()) {
-                    const profile = await liff.getProfile();
-                    document.getElementById('displayName').textContent = profile.displayName;
-                    document.getElementById('statusMessage').textContent = profile.statusMessage || '-';
-                    document.getElementById('profileImage').src = profile.pictureUrl || 'https://cdn.pixabay.com/animation/2022/11/04/09/42/09-42-03-510_512.gif';
-                    document.getElementById('userStatus').textContent = 'Online';
-                    document.getElementById('userId').value = profile.userId;
-                } else {
-                    liff.login();
-                }
-            } catch (error) {
-                console.error('LIFF initialization error:', error);
-                Swal.fire({
-                    title: 'เกิดข้อผิดพลาด',
-                    text: 'ไม่สามารถเชื่อมต่อกับ LINE ได้',
-                    icon: 'error',
-                    confirmButtonColor: '#4facfe',
-                });
-            }
-        }
-
-        async function sendToGoogleSheet(data) {
-            try {
-                const response = await fetch(googleSheetScriptUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-                if (response.ok) {
-                    return true;
-                } else {
-                    console.error('Error sending data to Google Sheets:', result);
-                    return false;
-                }
-            } catch (error) {
-                console.error('Error sending data to Google Sheets:', error);
-                return false;
-            }
-        }
-
-        async function sendFlexMessage(data) {
-            const now = new Date();
-            const time = now.toLocaleTimeString('th-TH', { hour12: false });
-            const date = now.toLocaleDateString('th-TH');
-            
-            const message = {
-                type: 'flex',
-                altText: `ลงทะเบียนสำเร็จ ${time}`,
-                contents: {
-                    "type": "bubble",
-                    "size": "kilo",
-                    "body": {
-                        "type": "box",
-                        "layout": "vertical",
-                        "contents": [
-                            {
-                                "type": "text",
-                                "text": "ลงทะเบียนสำเร็จ!",
-                                "weight": "bold",
-                                "size": "xl",
-                                "color": "#4facfe",
-                                "align": "center",
-                                "margin": "md"
-                            },
-                            {
-                                "type": "separator",
-                                "margin": "md"
-                            },
-                            {
-                                "type": "box",
-                                "layout": "vertical",
-                                "margin": "lg",
-                                "spacing": "sm",
-                                "contents": [
-                                    {
-                                        "type": "box",
-                                        "layout": "baseline",
-                                        "spacing": "sm",
-                                        "contents": [
-                                            {
-                                                "type": "text",
-                                                "text": "ชื่อ",
-                                                "color": "#666666",
-                                                "size": "sm",
-                                                "flex": 2
-                                            },
-                                            {
-                                                "type": "text",
-                                                "text": `${data.Firstname} ${data.Lastname}`,
-                                                "wrap": true,
-                                                "color": "#333333",
-                                                "size": "sm",
-                                                "flex": 5
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "box",
-                                        "layout": "baseline",
-                                        "spacing": "sm",
-                                        "contents": [
-                                            {
-                                                "type": "text",
-                                                "text": "ตำแหน่ง",
-                                                "color": "#666666",
-                                                "size": "sm",
-                                                "flex": 2
-                                            },
-                                            {
-                                                "type": "text",
-                                                "text": data.position,
-                                                "wrap": true,
-                                                "color": "#333333",
-                                                "size": "sm",
-                                                "flex": 5
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "box",
-                                        "layout": "baseline",
-                                        "spacing": "sm",
-                                        "contents": [
-                                            {
-                                                "type": "text",
-                                                "text": "หน่วยงาน",
-                                                "color": "#666666",
-                                                "size": "sm",
-                                                "flex": 2
-                                            },
-                                            {
-                                                "type": "text",
-                                                "text": data.department,
-                                                "wrap": true,
-                                                "color": "#333333",
-                                                "size": "sm",
-                                                "flex": 5
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "box",
-                                        "layout": "baseline",
-                                        "spacing": "sm",
-                                        "contents": [
-                                            {
-                                                "type": "text",
-                                                "text": "วันที่",
-                                                "color": "#666666",
-                                                "size": "sm",
-                                                "flex": 2
-                                            },
-                                            {
-                                                "type": "text",
-                                                "text": `${data.Date_follow} ${time}`,
-                                                "wrap": true,
-                                                "color": "#333333",
-                                                "size": "sm",
-                                                "flex": 5
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "separator",
-                                "margin": "md"
-                            },
-                            {
-                                "type": "text",
-                                "text": "ขอบคุณที่ลงทะเบียนกับเรา",
-                                "margin": "md",
-                                "align": "center",
-                                "color": "#666666",
-                                "size": "sm"
-                            }
-                        ]
-                    }
-                }
-            };
-
-            try {
-                await liff.sendMessages([message]);
-                setTimeout(() => {
-                    liff.closeWindow();
-                }, 1500);
-            } catch (error) {
-                console.error('Error sending message:', error);
-                Swal.fire({
-                    title: 'ส่งข้อความไม่สำเร็จ',
-                    text: 'แต่ข้อมูลถูกบันทึกแล้ว',
-                    icon: 'info',
-                    confirmButtonColor: '#4facfe',
-                }).then(() => {
-                    liff.closeWindow();
-                });
-            }
-        }
-
+        // ฟังก์ชันตรวจสอบฟอร์ม
         function validateForm() {
-            const firstName = document.getElementById('firstName')?.value.trim();
-            const lastName = document.getElementById('lastName')?.value.trim();
-            const position = document.getElementById('position')?.value;
-            const department = document.getElementById('department')?.value.trim();
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const department = document.getElementById('department').value.trim();
 
             if (!firstName) {
                 Swal.fire({
@@ -452,15 +172,6 @@
                 return false;
             }
 
-            if (!position) {
-                Swal.fire({
-                    title: 'กรุณาเลือกตำแหน่ง',
-                    icon: 'warning',
-                    confirmButtonColor: '#4facfe',
-                });
-                return false;
-            }
-
             if (!department) {
                 Swal.fire({
                     title: 'กรุณากรอกชื่อหน่วยงาน',
@@ -473,61 +184,254 @@
             return true;
         }
 
-        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
+        // ฟังก์ชันส่งข้อมูลไปยัง Google Sheets
+        async function sendToGoogleSheet(data) {
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(data)
+                });
 
-            // ตรวจสอบว่ากำลังส่งข้อมูลอยู่หรือไม่
-            if (isSubmitting) return;
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                return await response.json();
+            } catch (error) {
+                console.error('Error sending data:', error);
+                throw error;
+            }
+        }
+
+        // ฟังก์ชันส่ง Flex Message
+        async function sendFlexMessage(data) {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('th-TH', { hour12: false });
+            const dateStr = now.toLocaleDateString('th-TH');
             
-            // ตรวจสอบความถูกต้องของฟอร์ม
-            if (!validateForm()) return;
-
-            showLoading();
-
-            const userId = document.getElementById('userId').value;
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const position = document.getElementById('position').value;
-            const department = document.getElementById('department').value.trim();
-            const dateFollow = new Date().toLocaleDateString('th-TH');
-
-            const data = {
-                Date_follow: dateFollow,
-                User_ID: userId,
-                Firstname: firstName,
-                Lastname: lastName,
-                position: position,
-                department: department
+            const message = {
+                type: 'flex',
+                altText: 'ลงทะเบียนสำเร็จ',
+                contents: {
+                    type: 'bubble',
+                    body: {
+                        type: 'box',
+                        layout: 'vertical',
+                        contents: [
+                            {
+                                type: 'text',
+                                text: 'ลงทะเบียนสำเร็จ!',
+                                weight: 'bold',
+                                size: 'xl',
+                                color: '#4facfe',
+                                align: 'center'
+                            },
+                            {
+                                type: 'separator',
+                                margin: 'md'
+                            },
+                            {
+                                type: 'box',
+                                layout: 'vertical',
+                                margin: 'lg',
+                                spacing: 'sm',
+                                contents: [
+                                    {
+                                        type: 'box',
+                                        layout: 'baseline',
+                                        spacing: 'sm',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'ชื่อ-สกุล',
+                                                color: '#666666',
+                                                size: 'sm',
+                                                flex: 2
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: `${data.Firstname} ${data.Lastname}`,
+                                                wrap: true,
+                                                color: '#333333',
+                                                size: 'sm',
+                                                flex: 5
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: 'box',
+                                        layout: 'baseline',
+                                        spacing: 'sm',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'ตำแหน่ง',
+                                                color: '#666666',
+                                                size: 'sm',
+                                                flex: 2
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: data.position,
+                                                wrap: true,
+                                                color: '#333333',
+                                                size: 'sm',
+                                                flex: 5
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: 'box',
+                                        layout: 'baseline',
+                                        spacing: 'sm',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'หน่วยงาน',
+                                                color: '#666666',
+                                                size: 'sm',
+                                                flex: 2
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: data.department,
+                                                wrap: true,
+                                                color: '#333333',
+                                                size: 'sm',
+                                                flex: 5
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        type: 'box',
+                                        layout: 'baseline',
+                                        spacing: 'sm',
+                                        contents: [
+                                            {
+                                                type: 'text',
+                                                text: 'วันที่',
+                                                color: '#666666',
+                                                size: 'sm',
+                                                flex: 2
+                                            },
+                                            {
+                                                type: 'text',
+                                                text: `${dateStr} ${timeStr}`,
+                                                wrap: true,
+                                                color: '#333333',
+                                                size: 'sm',
+                                                flex: 5
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
             };
 
             try {
-                const success = await sendToGoogleSheet(data);
+                await liff.sendMessages([message]);
+            } catch (error) {
+                console.error('Error sending Flex Message:', error);
+            }
+        }
+
+        // ฟังก์ชันลงทะเบียน
+        async function registerUser() {
+            if (isSubmitting) return;
+            if (!validateForm()) return;
+
+            try {
+                showLoading();
                 
-                if (success) {
+                const userId = document.getElementById('userId').value;
+                const firstName = document.getElementById('firstName').value.trim();
+                const lastName = document.getElementById('lastName').value.trim();
+                const position = document.getElementById('position').value;
+                const department = document.getElementById('department').value.trim();
+                
+                const data = {
+                    Date_follow: new Date().toLocaleDateString('th-TH'),
+                    User_ID: userId,
+                    Firstname: firstName,
+                    Lastname: lastName,
+                    position: position,
+                    department: department,
+                    status: 'active'
+                };
+
+                const result = await sendToGoogleSheet(data);
+                
+                if (result && result.status === "success") {
                     await sendFlexMessage(data);
-                } else {
-                    hideLoading();
                     Swal.fire({
-                        title: 'เกิดข้อผิดพลาด',
-                        text: 'ไม่สามารถบันทึกข้อมูลได้ กรุณาลองอีกครั้ง',
-                        icon: 'error',
+                        title: 'สำเร็จ!',
+                        text: 'ลงทะเบียนเรียบร้อยแล้ว',
+                        icon: 'success',
                         confirmButtonColor: '#4facfe',
+                    }).then(() => {
+                        liff.closeWindow();
                     });
+                } else {
+                    throw new Error(result?.message || 'การบันทึกข้อมูลไม่สำเร็จ');
                 }
             } catch (error) {
-                console.error('Error:', error);
-                hideLoading();
+                console.error('Registration error:', error);
                 Swal.fire({
                     title: 'เกิดข้อผิดพลาด',
-                    text: 'มีปัญหาในการประมวลผล',
+                    text: error.message || 'ไม่สามารถบันทึกข้อมูลได้',
+                    icon: 'error',
+                    confirmButtonColor: '#4facfe',
+                });
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // ฟังก์ชันเริ่มต้น LIFF
+        async function initializeLiff() {
+            try {
+                await liff.init({ liffId: LIFF_ID });
+                
+                if (liff.isLoggedIn()) {
+                    const profile = await liff.getProfile();
+                    
+                    // แสดงข้อมูลโปรไฟล์
+                    document.getElementById('displayName').textContent = profile.displayName;
+                    document.getElementById('statusMessage').textContent = `สถานะ: ${profile.statusMessage || '-'}`;
+                    document.getElementById('profileImage').src = profile.pictureUrl || 'https://cdn.pixabay.com/animation/2022/11/04/09/42/09-42-03-510_512.gif';
+                    document.getElementById('userId').value = profile.userId;
+                    
+                    // อัพเดทเวลาทุกวินาที
+                    setInterval(updateTime, 1000);
+                    updateTime();
+                    
+                    // ตั้งค่าการส่งฟอร์ม
+                    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        registerUser();
+                    });
+                } else {
+                    liff.login();
+                }
+            } catch (error) {
+                console.error('LIFF initialization error:', error);
+                Swal.fire({
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถเชื่อมต่อกับ LINE ได้',
                     icon: 'error',
                     confirmButtonColor: '#4facfe',
                 });
             }
-        });
+        }
 
-        // Initialize the app
-        initializeLiff();
+        // เริ่มต้นแอปพลิเคชัน
+        window.addEventListener('DOMContentLoaded', initializeLiff);
     </script>
 </body>
 </html>
