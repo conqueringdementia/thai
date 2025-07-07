@@ -161,7 +161,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="position">แผนก</label>
+                    <label for="position">ปฏิบัติหน้าที่เป็น</label>
                     <select id="position" class="w-full py-2 px-4 border focus:outline-none" required>
                         <option value="FCG" selected>ผู้ดูแลในครอบครัว</option>
                         <option value="CG">CG</option>
@@ -174,7 +174,7 @@
                     <label for="department">ขึ้นตรงหน่วยงาน(ชื่อ รพ.)</label>
                     <input type="text" id="department" class="w-full py-2 px-4 border focus:outline-none" required>
                 </div>
-
+                
                 <div class="mt-8">
                     <button type="submit" id="submitBtn" class="w-full py-3 px-4 rounded-lg">
                         ลงทะเบียน
@@ -354,7 +354,7 @@
                                         "contents": [
                                             {
                                                 "type": "text",
-                                                "text": "แผนก",
+                                                "text": "หน่วยงาน",
                                                 "color": "#666666",
                                                 "size": "sm",
                                                 "flex": 2
@@ -429,11 +429,10 @@
         }
 
         function validateForm() {
-            const firstName = document.getElementById('firstName').value.trim();
-            const lastName = document.getElementById('lastName').value.trim();
-            const position = document.getElementById('position').value.trim();
-            const department = document.getElementById('department').value;
-            const status = document.getElementById('status').value;
+            const firstName = document.getElementById('firstName')?.value.trim();
+            const lastName = document.getElementById('lastName')?.value.trim();
+            const position = document.getElementById('position')?.value;
+            const department = document.getElementById('department')?.value.trim();
 
             if (!firstName) {
                 Swal.fire({
@@ -455,7 +454,7 @@
 
             if (!position) {
                 Swal.fire({
-                    title: 'กรุณากรอกตำแหน่ง',
+                    title: 'กรุณาเลือกตำแหน่ง',
                     icon: 'warning',
                     confirmButtonColor: '#4facfe',
                 });
@@ -464,13 +463,12 @@
 
             if (!department) {
                 Swal.fire({
-                    title: 'กรุณาเลือกแผนก',
+                    title: 'กรุณากรอกชื่อหน่วยงาน',
                     icon: 'warning',
                     confirmButtonColor: '#4facfe',
                 });
                 return false;
             }
-
 
             return true;
         }
@@ -489,8 +487,8 @@
             const userId = document.getElementById('userId').value;
             const firstName = document.getElementById('firstName').value.trim();
             const lastName = document.getElementById('lastName').value.trim();
-            const position = document.getElementById('position').value.trim();
-            const department = document.getElementById('department').value;
+            const position = document.getElementById('position').value;
+            const department = document.getElementById('department').value.trim();
             const dateFollow = new Date().toLocaleDateString('th-TH');
 
             const data = {
