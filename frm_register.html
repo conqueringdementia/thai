@@ -16,34 +16,41 @@
             color: #003366;
         }
         body {
-            background-color: #90EE90;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             font-family: 'Kanit', sans-serif;
+            min-height: 100vh;
         }
         .container {
             max-width: 400px;
             background: white;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            overflow: hidden;
             transition: all 0.3s ease;
+            margin: 20px auto;
         }
         .container:hover {
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-        }
-        .header-gradient {
-            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            transform: translateY(-5px);
         }
         .profile-section {
-            background: linear-gradient(to right, #f0f4ff, #e6e9f0);
-            padding: 15px;
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            padding: 20px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            color: white;
         }
         #profileImage {
             border: 3px solid white;
             box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        #profileImage:hover {
+            transform: scale(1.05);
         }
         .time-display {
-            background-color: #2c3e50;
+            background-color: rgba(0,0,0,0.2);
             color: white;
             padding: 8px 12px;
             border-radius: 20px;
@@ -58,7 +65,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -66,11 +73,11 @@
             display: none;
         }
         .loading-spinner {
-            border: 8px solid #f3f3f3;
-            border-top: 8px solid #3498db;
+            border: 5px solid rgba(255,255,255,0.3);
             border-radius: 50%;
-            width: 60px;
-            height: 60px;
+            border-top: 5px solid #4facfe;
+            width: 50px;
+            height: 50px;
             animation: spin 1s linear infinite;
         }
         @keyframes spin {
@@ -78,22 +85,46 @@
             100% { transform: rotate(360deg); }
         }
         input, select {
-            border-radius: 0.75em !important;
+            border-radius: 10px !important;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+        }
+        input:focus, select:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
         }
         button {
-            color: #000;
-            border: solid 2px #fff;
-            box-shadow: #000 2px 2px 1px;
-            border-radius: 0.75em;
-            background-color: #90EE90 !important;
+            color: white;
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%) !important;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #4a5568;
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
-    <div class="container mx-auto rounded-lg overflow-hidden">
+<body class="flex items-center justify-center p-4">
+    <div class="container">
         <!-- Header -->
-        <div class="text-black text-center py-5">
-            <h1 class="text-2xl font-bold">ลงทะเบียนผู้ใช้</h1>
+        <div class="text-center py-6 bg-gradient-to-r from-blue-500 to-cyan-400">
+            <h1 class="text-2xl font-bold text-white">ลงทะเบียนผู้ใช้</h1>
         </div>
 
         <!-- Profile Section -->
@@ -101,9 +132,9 @@
             <div class="flex items-center">
                 <img id="profileImage" src="https://cdn.pixabay.com/animation/2022/11/04/09/42/09-42-03-510_512.gif" alt="Profile" class="w-16 h-16 rounded-full mr-4">
                 <div>
-                    <h4 id="displayName" class="text-lg font-medium text-gray-800">Loading...</h4>
-                    <p id="statusMessage" class="text-gray-500 text-sm">Loading status...</p>
-                    <span id="userStatus" class="inline-block px-2 py-1 text-sm text-white bg-green-500 rounded-full">Online</span>
+                    <h4 id="displayName" class="text-lg font-medium">Loading...</h4>
+                    <p id="statusMessage" class="text-sm opacity-80">Loading status...</p>
+                    <span id="userStatus" class="inline-block px-2 py-1 text-xs bg-white bg-opacity-20 rounded-full mt-1">Online</span>
                 </div>
             </div>
             <div id="timeDisplay" class="time-display">
@@ -114,24 +145,24 @@
         <!-- Registration Form -->
         <div class="p-6">
             <form id="registrationForm">
-                <div class="mb-4">
-                    <label for="userId" class="block text-gray-700 text-sm font-medium mb-2">User ID</label>
-                    <input type="text" id="userId" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" readonly>
+                <div class="form-group">
+                    <label for="userId">User ID</label>
+                    <input type="text" id="userId" class="w-full py-2 px-4 border focus:outline-none" readonly>
                 </div>
                 
-                <div class="mb-4">
-                    <label for="firstName" class="block text-gray-700 text-sm font-medium mb-2">ชื่อ</label>
-                    <input type="text" id="firstName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <div class="form-group">
+                    <label for="firstName">ชื่อ</label>
+                    <input type="text" id="firstName" class="w-full py-2 px-4 border focus:outline-none" required>
                 </div>
                 
-                <div class="mb-4">
-                    <label for="lastName" class="block text-gray-700 text-sm font-medium mb-2">นามสกุล</label>
-                    <input type="text" id="lastName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <div class="form-group">
+                    <label for="lastName">นามสกุล</label>
+                    <input type="text" id="lastName" class="w-full py-2 px-4 border focus:outline-none" required>
                 </div>
-                                
-                <div class="mb-4">
-                    <label for="position" class="block text-gray-700 text-sm font-medium mb-2">ปฏิบัติหน้าที่เป็น</label>
-                    <select id="position" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                
+                <div class="form-group">
+                    <label for="position">แผนก</label>
+                    <select id="position" class="w-full py-2 px-4 border focus:outline-none" required>
                         <option value="FCG" selected>ผู้ดูแลในครอบครัว</option>
                         <option value="CG">CG</option>
                         <option value="CM">CM</option>
@@ -139,13 +170,13 @@
                     </select>
                 </div>
                 
-                <div class="mb-4">
-                    <label for="department" class="block text-gray-700 text-sm font-medium mb-2">ขึ้นตรงหน่วยงาน(ชื่อ รพ.)</label>
-                    <input type="text" id="department" name="department" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-            </div>
-                
-                <div class="flex items-center justify-center mt-6">
-                    <button type="submit" class="font-bold py-2 px-4 focus:outline-none focus:shadow-outline hover:bg-green-700 transition-colors">
+                <div class="form-group">
+                    <label for="department">ขึ้นตรงหน่วยงาน(ชื่อ รพ.)</label>
+                    <input type="text" id="department" class="w-full py-2 px-4 border focus:outline-none" required>
+                </div>
+
+                <div class="mt-8">
+                    <button type="submit" id="submitBtn" class="w-full py-3 px-4 rounded-lg">
                         ลงทะเบียน
                     </button>
                 </div>
@@ -155,12 +186,18 @@
 
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay">
-        <div class="loading-spinner"></div>
+        <div class="text-center">
+            <div class="loading-spinner mb-4"></div>
+            <p class="text-white font-medium">กำลังประมวลผล...</p>
+        </div>
     </div>
 
     <script>
         const liffId = '2007308455-419pPMV6';
         const googleSheetScriptUrl = 'https://script.google.com/macros/s/AKfycbw7KGYJaz0BnamDyVXgoDM-nyw2wFHLnQ8b3sZM9vCStNVB2yqhxuya3GD7CQKGUDEczw/exec';
+
+        // ตัวแปรสำหรับตรวจสอบสถานะ
+        let isSubmitting = false;
 
         function updateTime() {
             const now = new Date();
@@ -175,10 +212,14 @@
 
         function showLoading() {
             document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('submitBtn').disabled = true;
+            isSubmitting = true;
         }
 
         function hideLoading() {
             document.getElementById('loadingOverlay').style.display = 'none';
+            document.getElementById('submitBtn').disabled = false;
+            isSubmitting = false;
         }
 
         async function initializeLiff() {
@@ -199,7 +240,8 @@
                 Swal.fire({
                     title: 'เกิดข้อผิดพลาด',
                     text: 'ไม่สามารถเชื่อมต่อกับ LINE ได้',
-                    icon: 'error'
+                    icon: 'error',
+                    confirmButtonColor: '#4facfe',
                 });
             }
         }
@@ -237,17 +279,19 @@
                 altText: `ลงทะเบียนสำเร็จ ${time}`,
                 contents: {
                     "type": "bubble",
+                    "size": "kilo",
                     "body": {
                         "type": "box",
                         "layout": "vertical",
                         "contents": [
                             {
                                 "type": "text",
-                                "text": "ลงทะเบียนสำเร็จ",
+                                "text": "ลงทะเบียนสำเร็จ!",
                                 "weight": "bold",
                                 "size": "xl",
-                                "color": "#0066CC",
-                                "align": "center"
+                                "color": "#4facfe",
+                                "align": "center",
+                                "margin": "md"
                             },
                             {
                                 "type": "separator",
@@ -266,14 +310,14 @@
                                         "contents": [
                                             {
                                                 "type": "text",
-                                                "text": "ชื่อ-สกุล",
+                                                "text": "ชื่อ",
                                                 "color": "#666666",
                                                 "size": "sm",
                                                 "flex": 2
                                             },
                                             {
                                                 "type": "text",
-                                                "text": `${data.firstName} ${data.lastName}`,
+                                                "text": `${data.Firstname} ${data.Lastname}`,
                                                 "wrap": true,
                                                 "color": "#333333",
                                                 "size": "sm",
@@ -332,28 +376,6 @@
                                         "contents": [
                                             {
                                                 "type": "text",
-                                                "text": "สถานะ",
-                                                "color": "#666666",
-                                                "size": "sm",
-                                                "flex": 2
-                                            },
-                                            {
-                                                "type": "text",
-                                                "text": data.status,
-                                                "wrap": true,
-                                                "color": "#333333",
-                                                "size": "sm",
-                                                "flex": 5
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "box",
-                                        "layout": "baseline",
-                                        "spacing": "sm",
-                                        "contents": [
-                                            {
-                                                "type": "text",
                                                 "text": "วันที่",
                                                 "color": "#666666",
                                                 "size": "sm",
@@ -361,7 +383,7 @@
                                             },
                                             {
                                                 "type": "text",
-                                                "text": `${date} ${time}`,
+                                                "text": `${data.Date_follow} ${time}`,
                                                 "wrap": true,
                                                 "color": "#333333",
                                                 "size": "sm",
@@ -377,10 +399,11 @@
                             },
                             {
                                 "type": "text",
-                                "text": "ขอบคุณที่ลงทะเบียน",
+                                "text": "ขอบคุณที่ลงทะเบียนกับเรา",
                                 "margin": "md",
                                 "align": "center",
-                                "color": "#666666"
+                                "color": "#666666",
+                                "size": "sm"
                             }
                         ]
                     }
@@ -389,31 +412,86 @@
 
             try {
                 await liff.sendMessages([message]);
-                liff.closeWindow();
+                setTimeout(() => {
+                    liff.closeWindow();
+                }, 1500);
             } catch (error) {
                 console.error('Error sending message:', error);
                 Swal.fire({
                     title: 'ส่งข้อความไม่สำเร็จ',
                     text: 'แต่ข้อมูลถูกบันทึกแล้ว',
-                    icon: 'info'
+                    icon: 'info',
+                    confirmButtonColor: '#4facfe',
                 }).then(() => {
                     liff.closeWindow();
                 });
             }
         }
 
+        function validateForm() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const position = document.getElementById('position').value.trim();
+            const department = document.getElementById('department').value;
+            const status = document.getElementById('status').value;
+
+            if (!firstName) {
+                Swal.fire({
+                    title: 'กรุณากรอกชื่อ',
+                    icon: 'warning',
+                    confirmButtonColor: '#4facfe',
+                });
+                return false;
+            }
+
+            if (!lastName) {
+                Swal.fire({
+                    title: 'กรุณากรอกนามสกุล',
+                    icon: 'warning',
+                    confirmButtonColor: '#4facfe',
+                });
+                return false;
+            }
+
+            if (!position) {
+                Swal.fire({
+                    title: 'กรุณากรอกตำแหน่ง',
+                    icon: 'warning',
+                    confirmButtonColor: '#4facfe',
+                });
+                return false;
+            }
+
+            if (!department) {
+                Swal.fire({
+                    title: 'กรุณาเลือกแผนก',
+                    icon: 'warning',
+                    confirmButtonColor: '#4facfe',
+                });
+                return false;
+            }
+
+
+            return true;
+        }
+
         document.getElementById('registrationForm').addEventListener('submit', async function(event) {
             event.preventDefault();
 
-            const userId = document.getElementById('userId').value;
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const position = document.getElementById('position').value;
-            const department = document.getElementById('department').value;
-            const status = document.getElementById('status').value;
-            const dateFollow = new Date().toLocaleDateString('th-TH');
+            // ตรวจสอบว่ากำลังส่งข้อมูลอยู่หรือไม่
+            if (isSubmitting) return;
+            
+            // ตรวจสอบความถูกต้องของฟอร์ม
+            if (!validateForm()) return;
 
             showLoading();
+
+            const userId = document.getElementById('userId').value;
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const position = document.getElementById('position').value.trim();
+            const department = document.getElementById('department').value;
+            const dateFollow = new Date().toLocaleDateString('th-TH');
 
             const data = {
                 Date_follow: dateFollow,
@@ -421,20 +499,31 @@
                 Firstname: firstName,
                 Lastname: lastName,
                 position: position,
-                department: department,
-                status: status
+                department: department
             };
 
-            const success = await sendToGoogleSheet(data);
-            
-            if (success) {
-                await sendFlexMessage(data);
-            } else {
+            try {
+                const success = await sendToGoogleSheet(data);
+                
+                if (success) {
+                    await sendFlexMessage(data);
+                } else {
+                    hideLoading();
+                    Swal.fire({
+                        title: 'เกิดข้อผิดพลาด',
+                        text: 'ไม่สามารถบันทึกข้อมูลได้ กรุณาลองอีกครั้ง',
+                        icon: 'error',
+                        confirmButtonColor: '#4facfe',
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
                 hideLoading();
                 Swal.fire({
                     title: 'เกิดข้อผิดพลาด',
-                    text: 'ไม่สามารถบันทึกข้อมูลได้',
-                    icon: 'error'
+                    text: 'มีปัญหาในการประมวลผล',
+                    icon: 'error',
+                    confirmButtonColor: '#4facfe',
                 });
             }
         });
