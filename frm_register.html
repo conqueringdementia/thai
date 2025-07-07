@@ -1,405 +1,446 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบบันทึกข้อมูล LINE</title>
-    <script src="https://static.line-scdn.net/liff/edge/versions/2.22.3/sdk.js"></script>
+    <title>ลงทะเบียนผู้ใช้</title>
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #06C755;
-            /* สีเขียว LINE */
-            --secondary-color: #00B900;
-            --text-color: #333333;
-            --light-gray: #f5f5f5;
-            --white: #ffffff;
-            --border-radius: 12px;
+        h1, h2, h3, label, button {
+            font-family: 'Kanit', sans-serif;
+            color: #003366;
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        body {
+            background-color: #90EE90;
+            font-family: 'Kanit', sans-serif;
         }
-
-
-
-        .profile-container {
-            max-width: 100%;
-            width: 100%;
-            margin: 0 auto;
-            background: var(--white);
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            padding: 24px;
+        .container {
+            max-width: 400px;
+            background: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
-
-        .profile-header {
-            text-align: center;
-            margin-bottom: 20px;
+        .container:hover {
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
         }
-
-        .profile-header h1 {
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 16px;
+        .header-gradient {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
         }
-
-        .profile-img-container {
-            margin: 0 auto 20px;
+        .profile-section {
+            background: linear-gradient(to right, #f0f4ff, #e6e9f0);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
-
-        .profile-img {
+        #profileImage {
+            border: 3px solid white;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .time-display {
+            background-color: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--primary-color);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .profile-details {
-            padding: 0 12px;
-        }
-
-        .detail-item {
-            margin-bottom: 16px;
+            background: rgba(0, 0, 0, 0.5);
             display: flex;
-            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
         }
-
-        .detail-label {
-            font-weight: 600;
-            color: var(--primary-color);
-            width: 100px;
-            flex-shrink: 0;
-            margin-bottom: 4px;
-        }
-
-        .detail-value {
-            flex-grow: 1;
-            word-break: break-word;
-            padding-left: 12px;
-        }
-
-        @media (max-width: 480px) {
-            .profile-container {
-                padding: 16px;
-            }
-
-            .profile-img-container {
-            }
-
-            .detail-item {
-                flex-direction: column;
-            }
-
-            .detail-value {
-                padding-left: 0;
-            }
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-
-        .container {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            color: #06C755;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .profile-img {
-            width: 150px;
-            height: 150px;
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
             border-radius: 50%;
-            border: 4px solid #06C755;
-            display: block;
-            margin: 0 auto 20px;
-            object-fit: cover;
-        }
-
-        .profile-info {
-            margin-bottom: 20px;
-        }
-
-        .profile-info p {
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .profile-info strong {
-            color: #06C755;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 30px 0;
-        }
-
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top: 4px solid #06C755;
-            width: 40px;
-            height: 40px;
+            width: 60px;
+            height: 60px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
         }
-
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-
-        .error-message {
-            color: #d32f2f;
-            background: #ffebee;
-            padding: 15px;
-            border-radius: 5px;
-            margin-top: 20px;
-            text-align: center;
+        input, select {
+            border-radius: 0.75em !important;
+        }
+        button {
+            color: #000;
+            border: solid 2px #fff;
+            box-shadow: #000 2px 2px 1px;
+            border-radius: 0.75em;
+            background-color: #90EE90 !important;
         }
     </style>
 </head>
+<body class="flex items-center justify-center min-h-screen">
+    <div class="container mx-auto rounded-lg overflow-hidden">
+        <!-- Header -->
+        <div class="text-black text-center py-5">
+            <h1 class="text-2xl font-bold">ลงทะเบียนผู้ใช้</h1>
+        </div>
 
-<body>
-    <div class="container">
-        <div id="userInfo">
-            <div class="loading">
-                <div class="spinner"></div>
-                <p>กำลังเตรียมข้อมูล...</p>
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <div class="flex items-center">
+                <img id="profileImage" src="https://cdn.pixabay.com/animation/2022/11/04/09/42/09-42-03-510_512.gif" alt="Profile" class="w-16 h-16 rounded-full mr-4">
+                <div>
+                    <h4 id="displayName" class="text-lg font-medium text-gray-800">Loading...</h4>
+                    <p id="statusMessage" class="text-gray-500 text-sm">Loading status...</p>
+                    <span id="userStatus" class="inline-block px-2 py-1 text-sm text-white bg-green-500 rounded-full">Online</span>
+                </div>
             </div>
+            <div id="timeDisplay" class="time-display">
+                00:00:00
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="p-6">
+            <form id="registrationForm">
+                <div class="mb-4">
+                    <label for="userId" class="block text-gray-700 text-sm font-medium mb-2">User ID</label>
+                    <input type="text" id="userId" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" readonly>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="firstName" class="block text-gray-700 text-sm font-medium mb-2">ชื่อ</label>
+                    <input type="text" id="firstName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="lastName" class="block text-gray-700 text-sm font-medium mb-2">นามสกุล</label>
+                    <input type="text" id="lastName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                </div>
+                                
+                <div class="mb-4">
+                    <label for="position" class="block text-gray-700 text-sm font-medium mb-2">ปฏิบัติหน้าที่เป็น</label>
+                    <select id="position" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                        <option value="FCG" selected>ผู้ดูแลในครอบครัว</option>
+                        <option value="CG">CG</option>
+                        <option value="CM">CM</option>
+                        <option value="CCO">C-Co</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label for="department" class="block text-gray-700 text-sm font-medium mb-2">ขึ้นตรงหน่วยงาน(ชื่อ รพ.)</label>
+                    <input type="text" id="department" name="department" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+            </div>
+                
+                <div class="flex items-center justify-center mt-6">
+                    <button type="submit" class="font-bold py-2 px-4 focus:outline-none focus:shadow-outline hover:bg-green-700 transition-colors">
+                        ลงทะเบียน
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
-    <script>
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwgIuUzCk3WNTNxx-aEJunMFKvRSaVrgiupfH3CgnYLL7_afg1pJN6B6eBqm6Soeamq/exec";
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
 
-        function createFlexMessage(profile) {
-            return {
-                type: "flex",
-                altText: "บันทึกข้อมูลสำเร็จ!",
+    <script>
+        const liffId = '2007308455-419pPMV6';
+        const googleSheetScriptUrl = 'https://script.google.com/macros/s/AKfycbw7KGYJaz0BnamDyVXgoDM-nyw2wFHLnQ8b3sZM9vCStNVB2yqhxuya3GD7CQKGUDEczw/exec';
+
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('timeDisplay').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        async function initializeLiff() {
+            try {
+                await liff.init({ liffId: liffId });
+                if (liff.isLoggedIn()) {
+                    const profile = await liff.getProfile();
+                    document.getElementById('displayName').textContent = profile.displayName;
+                    document.getElementById('statusMessage').textContent = profile.statusMessage || '-';
+                    document.getElementById('profileImage').src = profile.pictureUrl || 'https://cdn.pixabay.com/animation/2022/11/04/09/42/09-42-03-510_512.gif';
+                    document.getElementById('userStatus').textContent = 'Online';
+                    document.getElementById('userId').value = profile.userId;
+                } else {
+                    liff.login();
+                }
+            } catch (error) {
+                console.error('LIFF initialization error:', error);
+                Swal.fire({
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถเชื่อมต่อกับ LINE ได้',
+                    icon: 'error'
+                });
+            }
+        }
+
+        async function sendToGoogleSheet(data) {
+            try {
+                const response = await fetch(googleSheetScriptUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    return true;
+                } else {
+                    console.error('Error sending data to Google Sheets:', result);
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error sending data to Google Sheets:', error);
+                return false;
+            }
+        }
+
+        async function sendFlexMessage(data) {
+            const now = new Date();
+            const time = now.toLocaleTimeString('th-TH', { hour12: false });
+            const date = now.toLocaleDateString('th-TH');
+            
+            const message = {
+                type: 'flex',
+                altText: `ลงทะเบียนสำเร็จ ${time}`,
                 contents: {
-                    type: "bubble",
-                    size: "kilo",
-                    body: {
-                        type: "box",
-                        layout: "vertical",
-                        contents: [
+                    "type": "bubble",
+                    "body": {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
                             {
-                                type: "text",
-                                text: "บันทึกข้อมูลสำเร็จ",
-                                weight: "bold",
-                                size: "xl",
-                                align: "center",
-                                color: "#06C755"
+                                "type": "text",
+                                "text": "ลงทะเบียนสำเร็จ",
+                                "weight": "bold",
+                                "size": "xl",
+                                "color": "#0066CC",
+                                "align": "center"
                             },
                             {
-                                type: "separator",
-                                margin: "md"
+                                "type": "separator",
+                                "margin": "md"
                             },
                             {
-                                type: "box",
-                                layout: "horizontal",
-                                margin: "lg",
-                                contents: [
+                                "type": "box",
+                                "layout": "vertical",
+                                "margin": "lg",
+                                "spacing": "sm",
+                                "contents": [
                                     {
-                                        type: "image",
-                                        url: profile.pictureUrl,
-                                        size: "xxs",
-                                        aspectMode: "cover",
-                                        aspectRatio: "1:1",
-                                        gravity: "center",
-                                        flex: 1
-                                    },
-                                    {
-                                        type: "box",
-                                        layout: "vertical",
-                                        flex: 4,
-                                        margin: "lg",
-                                        contents: [
+                                        "type": "box",
+                                        "layout": "baseline",
+                                        "spacing": "sm",
+                                        "contents": [
                                             {
-                                                type: "text",
-                                                text: profile.displayName,
-                                                weight: "bold",
-                                                size: "md"
+                                                "type": "text",
+                                                "text": "ชื่อ-สกุล",
+                                                "color": "#666666",
+                                                "size": "sm",
+                                                "flex": 2
                                             },
                                             {
-                                                type: "text",
-                                                text: `ID: ${profile.userId}`,
-                                                size: "sm",
-                                                color: "#888888",
-                                                margin: "sm"
+                                                "type": "text",
+                                                "text": `${data.firstName} ${data.lastName}`,
+                                                "wrap": true,
+                                                "color": "#333333",
+                                                "size": "sm",
+                                                "flex": 5
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "box",
+                                        "layout": "baseline",
+                                        "spacing": "sm",
+                                        "contents": [
+                                            {
+                                                "type": "text",
+                                                "text": "ตำแหน่ง",
+                                                "color": "#666666",
+                                                "size": "sm",
+                                                "flex": 2
+                                            },
+                                            {
+                                                "type": "text",
+                                                "text": data.position,
+                                                "wrap": true,
+                                                "color": "#333333",
+                                                "size": "sm",
+                                                "flex": 5
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "box",
+                                        "layout": "baseline",
+                                        "spacing": "sm",
+                                        "contents": [
+                                            {
+                                                "type": "text",
+                                                "text": "แผนก",
+                                                "color": "#666666",
+                                                "size": "sm",
+                                                "flex": 2
+                                            },
+                                            {
+                                                "type": "text",
+                                                "text": data.department,
+                                                "wrap": true,
+                                                "color": "#333333",
+                                                "size": "sm",
+                                                "flex": 5
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "box",
+                                        "layout": "baseline",
+                                        "spacing": "sm",
+                                        "contents": [
+                                            {
+                                                "type": "text",
+                                                "text": "สถานะ",
+                                                "color": "#666666",
+                                                "size": "sm",
+                                                "flex": 2
+                                            },
+                                            {
+                                                "type": "text",
+                                                "text": data.status,
+                                                "wrap": true,
+                                                "color": "#333333",
+                                                "size": "sm",
+                                                "flex": 5
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "box",
+                                        "layout": "baseline",
+                                        "spacing": "sm",
+                                        "contents": [
+                                            {
+                                                "type": "text",
+                                                "text": "วันที่",
+                                                "color": "#666666",
+                                                "size": "sm",
+                                                "flex": 2
+                                            },
+                                            {
+                                                "type": "text",
+                                                "text": `${date} ${time}`,
+                                                "wrap": true,
+                                                "color": "#333333",
+                                                "size": "sm",
+                                                "flex": 5
                                             }
                                         ]
                                     }
                                 ]
                             },
                             {
-                                type: "separator",
-                                margin: "lg"
+                                "type": "separator",
+                                "margin": "md"
                             },
                             {
-                                type: "text",
-                                text: "ข้อมูลของคุณได้ถูกบันทึกเรียบร้อยแล้ว",
-                                margin: "lg",
-                                wrap: true,
-                                align: "center"
+                                "type": "text",
+                                "text": "ขอบคุณที่ลงทะเบียน",
+                                "margin": "md",
+                                "align": "center",
+                                "color": "#666666"
                             }
                         ]
                     }
                 }
             };
-        }
 
-        async function sendDataToSheet(profile) {
             try {
-                // ส่งข้อมูลด้วย no-cors
-                await fetch(GOOGLE_SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        userId: profile.userId,
-                        displayName: profile.displayName,
-                        pictureUrl: profile.pictureUrl,
-                        statusMessage: profile.statusMessage || ""
-                    })
+                await liff.sendMessages([message]);
+                liff.closeWindow();
+            } catch (error) {
+                console.error('Error sending message:', error);
+                Swal.fire({
+                    title: 'ส่งข้อความไม่สำเร็จ',
+                    text: 'แต่ข้อมูลถูกบันทึกแล้ว',
+                    icon: 'info'
+                }).then(() => {
+                    liff.closeWindow();
                 });
-
-                return true;
-            } catch (error) {
-                console.error('Error sending data:', error);
-                return false;
             }
         }
 
-        async function sendFlexMessage(profile) {
-            if (!liff.isInClient()) {
-                console.log('ไม่สามารถส่ง Flex Message นอกแอป LINE');
-                return false;
+        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const userId = document.getElementById('userId').value;
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const position = document.getElementById('position').value;
+            const department = document.getElementById('department').value;
+            const status = document.getElementById('status').value;
+            const dateFollow = new Date().toLocaleDateString('th-TH');
+
+            showLoading();
+
+            const data = {
+                Date_follow: dateFollow,
+                User_ID: userId,
+                Firstname: firstName,
+                Lastname: lastName,
+                position: position,
+                department: department,
+                status: status
+            };
+
+            const success = await sendToGoogleSheet(data);
+            
+            if (success) {
+                await sendFlexMessage(data);
+            } else {
+                hideLoading();
+                Swal.fire({
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถบันทึกข้อมูลได้',
+                    icon: 'error'
+                });
             }
+        });
 
-            try {
-                const flexMessage = createFlexMessage(profile);
-                await liff.sendMessages([flexMessage]);
-                return true;
-            } catch (error) {
-                console.error('Error sending Flex Message:', error);
-                return false;
-            }
-        }
-
-        async function initializeLiff() {
-            try {
-                await liff.init({ liffId: "2006915175-p0567oBr" });
-
-                if (!liff.isLoggedIn()) {
-                    liff.login();
-                    return;
-                }
-
-                const profile = await liff.getProfile();
-
-                // แสดงข้อมูลผู้ใช้
-                document.getElementById('userInfo').innerHTML = `
-          
-  <div class="profile-container">
-    <div class="profile-header">
-      <h1>ข้อมูลโปรไฟล์ของคุณ</h1>
-      <div class="profile-img-container">
-        <img src="${profile.pictureUrl}" class="profile-img" alt="รูปโปรไฟล์">
-      </div>
-    </div>
-    
-    <div class="profile-details">
-      <div class="detail-item">
-        <span class="detail-label">User ID:</span>
-        <span class="detail-value">${profile.userId}</span>
-      </div>
-      
-      <div class="detail-item">
-        <span class="detail-label">ชื่อบัญชี:</span>
-        <span class="detail-value">${profile.displayName}</span>
-      </div>
-      
-      <div class="detail-item">
-        <span class="detail-label">สถานะ:</span>
-        <span class="detail-value">${profile.statusMessage || "ไม่มีสถานะ"}</span>
-      </div>
-    </div>
-  </div>
-          <div id="statusMessage" class="loading">
-            <div class="spinner"></div>
-            <p>กำลังบันทึกข้อมูล...</p>
-          </div>
-        `;
-
-                // ส่งข้อมูลและ Flex Message
-                const dataSent = await sendDataToSheet(profile);
-                const flexSent = await sendFlexMessage(profile);
-
-                if (dataSent) {
-                    document.getElementById('statusMessage').innerHTML = `
-            <div style="text-align: center; color: #06C755; margin-top: 20px;">
-              <p>บันทึกข้อมูลสำเร็จแล้ว!</p>
-            </div>
-          `;
-
-                    await Swal.fire({
-                        icon: 'success',
-                        title: 'สำเร็จ!',
-                        text: 'ข้อมูลของคุณถูกบันทึกเรียบร้อยแล้ว',
-                        confirmButtonText: 'ปิด',
-                        confirmButtonColor: '#06C755'
-                    });
-
-                    if (liff.isInClient()) {
-                        setTimeout(() => liff.closeWindow(), 2000);
-                    }
-                } else {
-                    throw new Error('เกิดข้อผิดพลาดในการบันทึกข้อมูล');
-                }
-
-            } catch (error) {
-                document.getElementById('userInfo').innerHTML = `
-          <div class="error-message">
-            <h3>เกิดข้อผิดพลาด</h3>
-            <p>${error.message}</p>
-            <button onclick="window.location.reload()">ลองอีกครั้ง</button>
-          </div>
-        `;
-                console.error('Error:', error);
-            }
-        }
-
+        // Initialize the app
         initializeLiff();
     </script>
 </body>
-
 </html>
