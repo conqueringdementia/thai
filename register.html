@@ -97,7 +97,7 @@
         input, select {
             border-radius: 0.75em !important;
             border: 1px solid #cbd5e0;
-            padding: 0.75rem !important;
+            padding: 0.75rem;
             width: 100%;
             transition: all 0.3s;
         }
@@ -190,7 +190,7 @@
             border: solid 2px #fff;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             border-radius: 0.75em;
-            background: linear-gradient(135deg, #90EE90 0%, #6bcf6b 100%) !important;
+            background: linear-gradient(135deg, #e6e6fa 0%, #8d8de2 100%) !important;
             font-family: 'Kanit', sans-serif;
             padding: 0.75em 1.5em;
             cursor: pointer;
@@ -324,6 +324,9 @@
     <!-- LIFF SDK -->
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script>
+        // ตัวแปรเก็บข้อมูลโปรไฟล์
+        let userProfile = null;
+
         // ฟังก์ชันอัพเดทเวลา
         function updateTime() {
             const now = new Date();
@@ -347,19 +350,16 @@
         }
 
         // ฟังก์ชันเริ่มต้น LIFF
-        const profileImageUrl;
-
         async function initializeLiff() {
             try {
                 const liffId = '2007308455-419pPMV6'; // เปลี่ยนเป็น LIFF ID ของคุณ
                 await liff.init({ liffId: liffId });
                 
                 if (liff.isLoggedIn()) {
-                    const profile = await liff.getProfile();
-                    document.getElementById('displayName').textContent = profile.displayName;
-                    document.getElementById('statusMessage').textContent = profile.statusMessage || 'ไม่มีสถานะ';
-                    document.getElementById('profileImage').src = profile.pictureUrl;
-                    profileImageUrl=profile.pictureUrl;
+                    userProfile = await liff.getProfile();
+                    document.getElementById('displayName').textContent = userProfile.displayName;
+                    document.getElementById('statusMessage').textContent = userProfile.statusMessage || 'ไม่มีสถานะ';
+                    document.getElementById('profileImage').src = userProfile.pictureUrl;
                     document.getElementById('userStatus').textContent = liff.isLoggedIn() ? 'Online' : 'Offline';
                 } else {
                     liff.login();
@@ -416,6 +416,11 @@
                 });
                 const timeStr = now.toLocaleTimeString('th-TH');
                 
+                // ใช้รูปโปรไฟล์จาก userProfile หรือใช้รูป default
+                const profileImageUrl = userProfile && userProfile.pictureUrl 
+                    ? userProfile.pictureUrl 
+                    : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+                
                 // Flex Message ที่สวยงามและมีสีสัน
                 const flexMessage = {
                     type: 'flex',
@@ -445,12 +450,15 @@
                             contents: [
                                 {
                                     type: "image",
-                                    url:  profileImageUrl || "https://i.pinimg.com/originals/be/04/0f/be040f35f073adc3a48c1fba489d2bc4.gif",
+                                    url: profileImageUrl,
                                     size: "full",
                                     aspectMode: "cover",
-                                    aspectRatio: "20:10"
+                                    aspectRatio: "1:1",
+                                    gravity: "top",
+                                    animated: false
                                 }
-                            ]
+                            ],
+                            paddingAll: "10px"
                         },
                         body: {
                             type: "box",
@@ -462,7 +470,8 @@
                                     weight: "bold",
                                     size: "lg",
                                     color: "#1F2937",
-                                    margin: "md"
+                                    margin: "md",
+                                    align: "center"
                                 },
                                 {
                                     type: "separator",
