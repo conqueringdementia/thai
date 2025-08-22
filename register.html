@@ -80,7 +80,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #90EE90 0%, #6bcf6b 100%);
+            background: linear-gradient(135deg, #e6e6fa 0%, #8d8de2 100%);
             color: #000000;
             font-family: 'Kanit', sans-serif;
             min-height: 100vh;
@@ -97,7 +97,7 @@
         input, select {
             border-radius: 0.75em !important;
             border: 1px solid #cbd5e0;
-            padding: 0.75rem;
+            padding: 0.75rem !important;
             width: 100%;
             transition: all 0.3s;
         }
@@ -442,7 +442,7 @@
                             contents: [
                                 {
                                     type: "image",
-                                    url:  profile.pictureUrl || "https://i.pinimg.com/originals/be/04/0f/be040f35f073adc3a48c1fba489d2bc4.gif",
+                                    url:  userData.pictureUrl || "https://i.pinimg.com/originals/be/04/0f/be040f35f073adc3a48c1fba489d2bc4.gif",
                                     size: "full",
                                     aspectMode: "cover",
                                     aspectRatio: "20:10"
