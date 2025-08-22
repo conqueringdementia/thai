@@ -347,6 +347,8 @@
         }
 
         // ฟังก์ชันเริ่มต้น LIFF
+        const profileImageUrl;
+
         async function initializeLiff() {
             try {
                 const liffId = '2007308455-419pPMV6'; // เปลี่ยนเป็น LIFF ID ของคุณ
@@ -357,6 +359,7 @@
                     document.getElementById('displayName').textContent = profile.displayName;
                     document.getElementById('statusMessage').textContent = profile.statusMessage || 'ไม่มีสถานะ';
                     document.getElementById('profileImage').src = profile.pictureUrl;
+                    profileImageUrl=profile.pictureUrl;
                     document.getElementById('userStatus').textContent = liff.isLoggedIn() ? 'Online' : 'Offline';
                 } else {
                     liff.login();
@@ -442,7 +445,7 @@
                             contents: [
                                 {
                                     type: "image",
-                                    url:  userData.pictureUrl || "https://i.pinimg.com/originals/be/04/0f/be040f35f073adc3a48c1fba489d2bc4.gif",
+                                    url:  profileImageUrl || "https://i.pinimg.com/originals/be/04/0f/be040f35f073adc3a48c1fba489d2bc4.gif",
                                     size: "full",
                                     aspectMode: "cover",
                                     aspectRatio: "20:10"
