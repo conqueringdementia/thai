@@ -442,7 +442,7 @@
                             contents: [
                                 {
                                     type: "image",
-                                    url: "https://cdn.pixabay.com/photo/2018/04/13/21/30/success-3317010_1280.png",
+                                    url:  profile.pictureUrl || "https://i.pinimg.com/originals/be/04/0f/be040f35f073adc3a48c1fba489d2bc4.gif",
                                     size: "full",
                                     aspectMode: "cover",
                                     aspectRatio: "20:10"
@@ -591,16 +591,6 @@
                                         }
                                     ],
                                     paddingAll: "10px"
-                                },
-                                {
-                                    type: "button",
-                                    style: "primary",
-                                    color: "#10B981",
-                                    action: {
-                                        type: "uri",
-                                        label: "เปิดในระบบจัดการ",
-                                        uri: "https://example.com/admin"  // เปลี่ยนเป็นลิงก์ที่ต้องการ
-                                    }
                                 }
                             ],
                             flex: 0
