@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ลงทะเบียนสมาชิก</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        .kanit-thin {
+            font-family: "Kanit", sans-serif;
+            font-weight: 100;
+            font-style: normal;
+        }
+
+        .kanit-extralight {
+            font-family: "Kanit", sans-serif;
+            font-weight: 200;
+            font-style: normal;
+        }
+
+        .kanit-light {
+            font-family: "Kanit", sans-serif;
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        .kanit-regular {
+            font-family: "Kanit", sans-serif;
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        .kanit-medium {
+            font-family: "Kanit", sans-serif;
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        .kanit-semibold {
+            font-family: "Kanit", sans-serif;
+            font-weight: 600;
+            font-style: normal;
+        }
+
+        .kanit-bold {
+            font-family: "Kanit", sans-serif;
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        .kanit-extrabold {
+            font-family: "Kanit", sans-serif;
+            font-weight: 800;
+            font-style: normal;
+        }
+
+        .kanit-black {
+            font-family: "Kanit", sans-serif;
+            font-weight: 900;
+            font-style: normal;
+        }
+
+        h2, h3, label, button {
+            font-family: 'Kanit', sans-serif;
+            color: #003366;
+        }
+        
+        h1 {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 700;
+        }
+        
+        p {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 400;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ffe4b5 0%, #ca9b4a 100%);
+            color: #000000;
+            font-family: 'Kanit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        a {
+            color: #8B0000;
+        }
+
+        input, select {
+            border-radius: 0.75em !important;
+            border: 1px solid #cbd5e0;
+            padding: 0.75rem !important;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4f9cf9;
+            box-shadow: 0 0 0 3px rgba(79, 156, 249, 0.3);
+        }
+
+        @keyframes is-rotating {
+            to {
+                transform: rotate(1turn);
+            }
+        }
+        
+        .container {
+            max-width: 500px !important;
+            background: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-radius: 1.5em;
+        }
+        
+        .container:hover {
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            transform: translateY(-5px);
+        }
+        
+        .header-gradient {
+            background: linear-gradient(135deg, #fa991b 0%, #ffbb38 100%);
+        }
+        
+        .profile-section {
+            background: linear-gradient(to right, #f0f4ff, #e6e9f0);
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        #profileImage {
+            border: 3px solid white;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        
+        .time-display {
+            background-color: #2c3e50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .loading-spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        button {
+            color: #000;
+            border: solid 2px #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 0.75em;
+            background: linear-gradient(135deg, #ffe4b5 0%, #ca9b4a 100%) !important;
+            font-family: 'Kanit', sans-serif;
+            padding: 0.75em 1.5em !important;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+        
+        .form-container {
+            padding: 1.5rem;
+        }
+        
+        .title {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #2c5282;
+            font-size: 1.75rem;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e53e3e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto">
+        <!-- Header -->
+        <div class="text-black text-center py-6 header-gradient">
+            <h1 class="text-2xl text-white">ลงทะเบียนผู้สูงอายุ</h1>
+        </div>
+
+        <!-- Profile Section -->
+        <div class="profile-section">
+            <div class="flex items-center">
+                <img id="profileImage" src="https://cdn.pixabay.com/animation/2022/11/04/09/42/09-42-03-510_512.gif" alt="Profile" class="w-16 h-16 rounded-full mr-4">
+                <div>
+                    <h4 id="displayName" class="text-lg text-gray-800">Loading...</h4>
+                    <p id="statusMessage" class="text-gray-500 text-sm">Loading status...</p>
+                    <span id="userStatus" class="status-badge inline-block px-2 py-1 text-sm text-white bg-green-500 rounded-full">Online</span>
+                </div>
+            </div>
+            <div id="timeDisplay" class="time-display">
+                00:00:00
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="form-container">
+            <form id="registrationForm">
+                <div class="form-group">
+                    <label for="firstName" class="required">ชื่อ</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName" class="required">นามสกุล</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+                
+                
+                <div class="form-group">
+                    <label for="department" class="required">โรงพยาบาลที่อยู่ใกล้</label>
+                    <input type="text" id="department" name="department" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address" class="required">ที่อยู่ (ผู้สูงอายุ)</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tambon" class="required">ตำบล</label>
+                    <input type="text" id="tambon" name="tambon" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="amphoe" class="required">อำเภอ</label>
+                    <input type="text" id="amphoe" name="amphoe" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="province" class="required">จังหวัด</label>
+                    <select name="province" id="province" required>
+                        <option value="">-- กรุณาเลือกจังหวัด --</option>
+                        <option value="ขอนแก่น">ขอนแก่น</option>
+                        <option value="มหาสารคาม">มหาสารคาม</option>
+                        <option value="ร้อยเอ็ด">ร้อยเอ็ด</option>
+                        <option value="กาฬสินธุ์">กาฬสินธุ์</option>
+                    </select>
+                </div>
+                
+                <div class="flex items-center justify-center mt-4">
+                    <button type="submit" id="bt_custom">ลงทะเบียน</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- LIFF SDK -->
+    <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script>
+        // ตัวแปรเก็บข้อมูลโปรไฟล์
+        let userProfile = null;
+
+        // ฟังก์ชันอัพเดทเวลา
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('timeDisplay').textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // ฟังก์ชันแสดงการโหลด
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        // ฟังก์ชันซ่อนการโหลด
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        // ฟังก์ชันเริ่มต้น LIFF
+        async function initializeLiff() {
+            try {
+                const liffId = '2007308455-419pPMV6'; // เปลี่ยนเป็น LIFF ID ของคุณ
+                await liff.init({ liffId: liffId });
+                
+                if (liff.isLoggedIn()) {
+                    userProfile = await liff.getProfile();
+                    document.getElementById('displayName').textContent = userProfile.displayName;
+                    document.getElementById('statusMessage').textContent = userProfile.statusMessage || 'ไม่มีสถานะ';
+                    document.getElementById('profileImage').src = userProfile.pictureUrl;
+                    document.getElementById('userStatus').textContent = liff.isLoggedIn() ? 'Online' : 'Offline';
+                } else {
+                    liff.login();
+                }
+            } catch (error) {
+                console.error('LIFF initialization error:', error);
+                document.getElementById('displayName').textContent = 'ไม่สามารถโหลดข้อมูลโปรไฟล์';
+            }
+        }
+
+        // ฟังก์ชันส่งข้อมูลไปยัง Google Sheets
+        async function sendToGoogleSheet(userId, firstName, lastName, position, department, address, tambon, amphoe, province) {
+            try {
+                // เปลี่ยน URL นี้เป็น URL ของ Google Apps Script ของคุณ
+                const googleScriptURL = 'https://script.google.com/macros/s/AKfycbw7KGYJaz0BnamDyVXgoDM-nyw2wFHLnQ8b3sZM9vCStNVB2yqhxuya3GD7CQKGUDEczw/exec';
+                
+                const response = await fetch(googleScriptURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        userId: userId,
+                        firstName: firstName,
+                        lastName: lastName,
+                        position: position,
+                        department: department,
+                        address: address,
+                        tambon: tambon,
+                        amphoe: amphoe,
+                        province: province
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    return { success: true, data: result };
+                } else {
+                    return { success: false, error: result };
+                }
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        // ฟังก์ชันส่ง Flex Message
+        async function sendFlexMessage(userData) {
+            try {
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('th-TH', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                const timeStr = now.toLocaleTimeString('th-TH');
+                
+                // ใช้รูปโปรไฟล์จาก userProfile หรือใช้รูป default
+                const profileImageUrl = userProfile && userProfile.pictureUrl 
+                    ? userProfile.pictureUrl 
+                    : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
+                
+                // Flex Message ที่สวยงามและมีสีสัน
+                const flexMessage = {
+                    type: 'flex',
+                    altText: `การลงทะเบียนสมาชิกใหม่ - ${userData.firstName} ${userData.lastName}`,
+                    contents: {
+                        type: "bubble",
+                        size: "mega",
+                        header: {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                                {
+                                    type: "text",
+                                    text: "✅ ลงทะเบียนสำเร็จ",
+                                    weight: "bold",
+                                    color: "#FFFFFF",
+                                    size: "xl",
+                                    align: "center"
+                                }
+                            ],
+                            backgroundColor: "#10B981",
+                            paddingAll: "20px"
+                        },
+                        hero: {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                                {
+                                    type: "image",
+                                    url: profileImageUrl,
+                                    size: "full",
+                                    aspectMode: "cover",
+                                    aspectRatio: "1:1",
+                                    gravity: "top",
+                                    animated: false
+                                }
+                            ],
+                            paddingAll: "10px"
+                        },
+                        body: {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                                {
+                                    type: "text",
+                                    text: "ข้อมูลการลงทะเบียน",
+                                    weight: "bold",
+                                    size: "lg",
+                                    color: "#1F2937",
+                                    margin: "md",
+                                    align: "center"
+                                },
+                                {
+                                    type: "separator",
+                                    margin: "md"
+                                },
+                                {
+                                    type: "box",
+                                    layout: "vertical",
+                                    margin: "lg",
+                                    spacing: "sm",
+                                    contents: [
+                                        {
+                                            type: "box",
+                                            layout: "baseline",
+                                            spacing: "sm",
+                                            contents: [
+                                                {
+                                                    type: "text",
+                                                    text: "ชื่อ-สกุล",
+                                                    color: "#6B7280",
+                                                    size: "sm",
+                                                    flex: 2
+                                                },
+                                                {
+                                                    type: "text",
+                                                    text: `${userData.firstName} ${userData.lastName}`,
+                                                    wrap: true,
+                                                    color: "#1F2937",
+                                                    size: "sm",
+                                                    flex: 5
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            type: "box",
+                                            layout: "baseline",
+                                            spacing: "sm",
+                                            contents: [
+                                                {
+                                                    type: "text",
+                                                    text: "ตำแหน่ง",
+                                                    color: "#6B7280",
+                                                    size: "sm",
+                                                    flex: 2
+                                                },
+                                                {
+                                                    type: "text",
+                                                    text: userData.position,
+                                                    wrap: true,
+                                                    color: "#1F2937",
+                                                    size: "sm",
+                                                    flex: 5
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            type: "box",
+                                            layout: "baseline",
+                                            spacing: "sm",
+                                            contents: [
+                                                {
+                                                    type: "text",
+                                                    text: "หน่วยงาน",
+                                                    color: "#6B7280",
+                                                    size: "sm",
+                                                    flex: 2
+                                                },
+                                                {
+                                                    type: "text",
+                                                    text: userData.department,
+                                                    wrap: true,
+                                                    color: "#1F2937",
+                                                    size: "sm",
+                                                    flex: 5
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            type: "box",
+                                            layout: "baseline",
+                                            spacing: "sm",
+                                            contents: [
+                                                {
+                                                    type: "text",
+                                                    text: "ที่อยู่",
+                                                    color: "#6B7280",
+                                                    size: "sm",
+                                                    flex: 2
+                                                },
+                                                {
+                                                    type: "text",
+                                                    text: `${userData.address} ${userData.tambon} ${userData.amphoe} ${userData.province}`,
+                                                    wrap: true,
+                                                    color: "#1F2937",
+                                                    size: "sm",
+                                                    flex: 5
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        footer: {
+                            type: "box",
+                            layout: "vertical",
+                            spacing: "sm",
+                            contents: [
+                                {
+                                    type: "separator"
+                                },
+                                {
+                                    type: "box",
+                                    layout: "horizontal",
+                                    contents: [
+                                        {
+                                            type: "text",
+                                            text: `วันที่: ${dateStr}`,
+                                            size: "xs",
+                                            color: "#6B7280",
+                                            align: "start"
+                                        },
+                                        {
+                                            type: "text",
+                                            text: `เวลา: ${timeStr}`,
+                                            size: "xs",
+                                            color: "#6B7280",
+                                            align: "end"
+                                        }
+                                    ],
+                                    paddingAll: "10px"
+                                }
+                            ],
+                            flex: 0
+                        }
+                    }
+                };
+
+                // ส่ง Flex Message
+                await liff.sendMessages([flexMessage]);
+                return { success: true };
+            } catch (error) {
+                console.error('Error sending flex message:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        // การจัดการฟอร์มเมื่อส่ง
+        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            // รับค่าจากฟอร์ม
+            const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
+            const position = document.getElementById('position').value;
+            const department = document.getElementById('department').value;
+            const address = document.getElementById('address').value;
+            const tambon = document.getElementById('tambon').value;
+            const amphoe = document.getElementById('amphoe').value;
+            const province = document.getElementById('province').value;
+
+            // ตรวจสอบว่าข้อมูลครบถ้วน
+            if (!firstName || !lastName || !position || !department || !address || !tambon || !amphoe || !province) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'ข้อมูลไม่ครบถ้วน',
+                    text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง',
+                    confirmButtonText: 'ตกลง'
+                });
+                return;
+            }
+
+            showLoading();
+
+            try {
+                // รับ userId จาก LIFF
+                let userId = "guest";
+                if (liff.isLoggedIn()) {
+                    const decoded = liff.getDecodedIDToken();
+                    userId = decoded.sub;
+                }
+
+                // ส่งข้อมูลไปยัง Google Sheets
+                const result = await sendToGoogleSheet(userId, firstName, lastName, position, department, address, tambon, amphoe, province);
+                
+                if (result.success) {
+                    // ส่ง Flex Message
+                    const userData = {
+                        firstName, lastName, position, department, address, tambon, amphoe, province
+                    };
+                    const flexResult = await sendFlexMessage(userData);
+                    
+                    hideLoading();
+                    
+                    // แสดงข้อความสำเร็จ
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ลงทะเบียนสำเร็จ',
+                        text: 'ข้อมูลของคุณถูกบันทึกเรียบร้อยแล้ว และส่งการแจ้งเตือนแล้ว',
+                        confirmButtonText: 'ตกลง'
+                    }).then(() => {
+                        document.getElementById('registrationForm').reset();
+                        if (liff.isInClient()) {
+                            liff.closeWindow();
+                        }
+                    });
+                } else {
+                    // แสดงข้อความผิดพลาด
+                    hideLoading();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เกิดข้อผิดพลาด',
+                        text: 'ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
+                        confirmButtonText: 'ตกลง'
+                    });
+                }
+            } catch (error) {
+                hideLoading();
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถบันทึกข้อมูลได้ กรุณาลองใหม่ในภายหลัง',
+                    confirmButtonText: 'ตกลง'
+                });
+            }
+        });
+
+        // เริ่มต้นแอปพลิเคชัน
+        initializeLiff();
+    </script>
+</body>
+</html>
