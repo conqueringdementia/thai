@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ลงทะเบียนสมาชิก</title>
+    <title>ลงทะเบียนผู้สูงอายุ</title>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -342,7 +342,7 @@
         // ฟังก์ชันเริ่มต้น LIFF
         async function initializeLiff() {
             try {
-                const liffId = '2007308455-419pPMV6'; // เปลี่ยนเป็น LIFF ID ของคุณ
+                const liffId = '2007308455-on3Xdl8x'; // เปลี่ยนเป็น LIFF ID ของคุณ
                 await liff.init({ liffId: liffId });
                 
                 if (liff.isLoggedIn()) {
@@ -361,6 +361,7 @@
         }
 
         // ฟังก์ชันส่งข้อมูลไปยัง Google Sheets
+        const position = "elderly";
         async function sendToGoogleSheet(userId, firstName, lastName, position, department, address, tambon, amphoe, province) {
             try {
                 // เปลี่ยน URL นี้เป็น URL ของ Google Apps Script ของคุณ
@@ -414,7 +415,7 @@
                 // Flex Message ที่สวยงามและมีสีสัน
                 const flexMessage = {
                     type: 'flex',
-                    altText: `การลงทะเบียนสมาชิกใหม่ - ${userData.firstName} ${userData.lastName}`,
+                    altText: `ลงทะเบียนผู้สูงอายุ - ${userData.firstName} ${userData.lastName}`,
                     contents: {
                         type: "bubble",
                         size: "mega",
@@ -456,7 +457,7 @@
                             contents: [
                                 {
                                     type: "text",
-                                    text: "ข้อมูลการลงทะเบียน",
+                                    text: "ข้อมูลการลงทะเบียนผู้สูงอายุ",
                                     weight: "bold",
                                     size: "lg",
                                     color: "#1F2937",
@@ -502,29 +503,7 @@
                                             contents: [
                                                 {
                                                     type: "text",
-                                                    text: "ตำแหน่ง",
-                                                    color: "#6B7280",
-                                                    size: "sm",
-                                                    flex: 2
-                                                },
-                                                {
-                                                    type: "text",
-                                                    text: userData.position,
-                                                    wrap: true,
-                                                    color: "#1F2937",
-                                                    size: "sm",
-                                                    flex: 5
-                                                }
-                                            ]
-                                        },
-                                        {
-                                            type: "box",
-                                            layout: "baseline",
-                                            spacing: "sm",
-                                            contents: [
-                                                {
-                                                    type: "text",
-                                                    text: "หน่วยงาน",
+                                                    text: "โรงพยาบาลที่อยู่ใกล้",
                                                     color: "#6B7280",
                                                     size: "sm",
                                                     flex: 2
@@ -616,7 +595,7 @@
             // รับค่าจากฟอร์ม
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
-            const position = document.getElementById('position').value;
+            //const position = document.getElementById('position').value;            
             const department = document.getElementById('department').value;
             const address = document.getElementById('address').value;
             const tambon = document.getElementById('tambon').value;
@@ -624,7 +603,7 @@
             const province = document.getElementById('province').value;
 
             // ตรวจสอบว่าข้อมูลครบถ้วน
-            if (!firstName || !lastName || !position || !department || !address || !tambon || !amphoe || !province) {
+            if (!firstName || !lastName || !department || !address || !tambon || !amphoe || !province) {
                 Swal.fire({
                     icon: 'warning',
                     title: 'ข้อมูลไม่ครบถ้วน',
