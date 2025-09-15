@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แอพแจ้งเตือนกินยาและนัดหมอ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); padding: 30px; }
+        h1 { text-align: center; color: #4a5568; margin-bottom: 30px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, select, button { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; box-sizing: border-box; }
+        button { background: #667eea; color: white; cursor: pointer; border: none; transition: background 0.3s; }
+        button:hover { background: #5a67d8; }
+        .reminders-list { margin-top: 20px; }
+        .reminder-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #eee; border-radius: 5px; margin-bottom: 10px; background: #f7fafc; }
+        .done-btn { background: #48bb78; padding: 5px 10px; }
+        .sync-btn { background: #ed8936; margin-top: 10px; }
+        #notification { position: fixed; top: 20px; right: 20px; background: #48bb78; color: white; padding: 15px; border-radius: 5px; display: none; z-index: 1000; }
+        .history { margin-top: 20px; padding: 15px; background: #e6fffa; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-pills"></i> แอพแจ้งเตือนกินยาและนัดหมอ</h1>
+        <p style="text-align: center;">ตั้งค่าการแจ้งเตือนสำหรับยาและนัดหมอ ส่งออกไป Google Calendar ได้</p>
+        
+        <!-- ฟอร์มสำหรับกรอกข้อมูล -->
+        <div class="form-group">
+            <label for="type">ประเภท:</label>
+            <select id="type">
+                <option value="medicine">กินยา</option>
+                <option value="appointment">นัดหมอ</option>
+                <option value="water">ดื่มน้ำ</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="name">ชื่อ (เช่น ยาปวดหัว):</label>
+            <input type="text" id="name" required>
+        </div>
+        <div class="form-group">
+            <label for="time">เวลา (HH:MM):</label>
+            <input type="time" id="time" required>
+        </div>
+        <div class="form-group">
+            <label for="frequency">ความถี่:</label>
+            <select id="frequency">
+                <option value="daily">ทุกวัน</option>
+                <option value="weekly">รายสัปดาห์</option>
+                <option value="once">ครั้งเดียว</option>
+            </select>
+        </div>
+        <button onclick="addReminder()"><i class="fas fa-plus"></i> เพิ่มคำเตือน</button>
+        
+        <!-- ปุ่มส่งออกไป Google Calendar -->
+        <button class="sync-btn" onclick="exportToICS()"><i class="fab fa-google"></i> ส่งออกไป Google Calendar</button>
+        
+        <!-- รายการ reminders -->
+        <div class="reminders-list" id="remindersList"></div>
+        
+        <!-- ประวัติ -->
+        <div class="history">
+            <h3>ประวัติการทำ</h3>
+            <ul id="historyList"></ul>
+        </div>
+    </div>
+    
+    <!-- Notification popup -->
+    <div id="notification">
+        <i class="fas fa-bell"></i> เวลากินยาแล้ว! <span id="notifMsg"></span>
+    </div>
+
+    <script>
+        let reminders = JSON.parse(localStorage.getItem('reminders')) || [];
+        let history = JSON.parse(localStorage.getItem('history')) || [];
+
+        // เพิ่ม reminder
+        function addReminder() {
+            const type = document.getElementById('type').value;
+            const name = document.getElementById('name').value;
+            const time = document.getElementById('time').value;
+            const frequency = document.getElementById('frequency').value;
+            
+            if (!name || !time) return alert('กรุณากรอกข้อมูลให้ครบ');
+            
+            const reminder = { id: Date.now(), type, name, time, frequency, done: false };
+            reminders.push(reminder);
+            localStorage.setItem('reminders', JSON.stringify(reminders));
+            displayReminders();
+            document.getElementById('name').value = '';
+        }
+
+        // แสดงรายการ reminders (sort ตามเวลา)
+        function displayReminders() {
+            const list = document.getElementById('remindersList');
+            list.innerHTML = '';
+            reminders.sort((a, b) => a.time.localeCompare(b.time));
+            reminders.forEach(rem => {
+                const item = document.createElement('div');
+                item.className = 'reminder-item';
+                item.innerHTML = `
+                    <span><i class="fas fa-${rem.type === 'medicine' ? 'pills' : rem.type === 'appointment' ? 'user-md' : 'tint'}"></i> ${rem.name} - ${rem.time} (${rem.frequency === 'daily' ? 'ทุกวัน' : rem.frequency === 'weekly' ? 'รายสัปดาห์' : 'ครั้งเดียว'})</span>
+                    <div>
+                        <button class="done-btn" onclick="markDone(${rem.id})">เสร็จ</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+            checkReminders();
+        }
+
+        // Mark as done และเพิ่ม history
+        function markDone(id) {
+            const rem = reminders.find(r => r.id === id);
+            rem.done = true;
+            history.push({ id, name: rem.name, time: new Date().toLocaleString('th-TH') });
+            localStorage.setItem('reminders', JSON.stringify(reminders));
+            localStorage.setItem('history', JSON.stringify(history));
+            displayReminders();
+            displayHistory();
+        }
+
+        // แสดง history (แสดง 5 รายการล่าสุด)
+        function displayHistory() {
+            const histList = document.getElementById('historyList');
+            histList.innerHTML = '';
+            history.slice(-5).reverse().forEach(h => {
+                const li = document.createElement('li');
+                li.textContent = `${h.name} - ${h.time}`;
+                histList.appendChild(li);
+            });
+        }
+
+        // ตรวจ reminders (ทุกนาที)
+        function checkReminders() {
+            setInterval(() => {
+                const now = new Date();
+                const currentTime = now.toTimeString().slice(0, 5);
+                reminders.forEach(rem => {
+                    if (!rem.done && rem.time === currentTime) {
+                        showNotification(rem.name);
+                        // Auto mark done หลัง 5 นาที ถ้าไม่ interact
+                        setTimeout(() => { if (!rem.done) markDone(rem.id); }, 300000);
+                    }
+                });
+            }, 60000); // ทุก 1 นาที
+        }
+
+        // แสดง notification
+        function showNotification(msg) {
+            if (Notification.permission === 'granted') {
+                new Notification('แอพแจ้งเตือน', { 
+                    body: `ถึงเวลาสำหรับ: ${msg}`, 
+                    icon: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyUzYuNDggMjIgMTIgMjJTMjIgMTcuNTIgMjIgMTJDMTcuNTIgMTIgMTIgNi40OCAxMiAyWiIgZmlsbD0iIzQ4QkI3OCIvPgo8cGF0aCBkPSJNMTMgMTNIMTFWLTIuNUwxMyAxMy4yNVYxM1oiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPgo=' 
+                });
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission();
+            }
+            document.getElementById('notifMsg').textContent = msg;
+            document.getElementById('notification').style.display = 'block';
+            setTimeout(() => { document.getElementById('notification').style.display = 'none'; }, 5000);
+        }
+
+        // ส่งออกเป็นไฟล์ ICS สำหรับ Google Calendar
+        function exportToICS() {
+            let ics = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Medication Reminder App//TH\n';
+            reminders.forEach(rem => {
+                const date = new Date();
+                const dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
+                const timeStr = rem.time.replace(':', '');
+                ics += `BEGIN:VEVENT\nSUMMARY:${rem.type === 'medicine' ? 'กินยา' : rem.type === 'appointment' ? 'นัดหมอ' : 'ดื่มน้ำ'}: ${rem.name}\nDTSTART:${dateStr}T${timeStr}00\nDTEND:${dateStr}T${timeStr}30\nRRULE:FREQ=${rem.frequency.toUpperCase()}\nEND:VEVENT\n`;
+            });
+            ics += 'END:VCALENDAR';
+            const blob = new Blob([ics], { type: 'text/calendar' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'reminders.ics';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Initialize
+        displayReminders();
+        displayHistory();
+        if (Notification.permission === 'default') Notification.requestPermission();
+    </script>
+</body>
+</html>
