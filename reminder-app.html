@@ -2,30 +2,129 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <title>แอพแจ้งเตือนกินยาและนัดหมอ</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); padding: 30px; }
-        h1 { text-align: center; color: #4a5568; margin-bottom: 30px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; }
-        input, select, button { padding: 10px; border: 1px solid #ddd; border-radius: 5px; width: 100%; box-sizing: border-box; }
-        button { background: #667eea; color: white; cursor: pointer; border: none; transition: background 0.3s; }
-        button:hover { background: #5a67d8; }
-        .reminders-list { margin-top: 20px; }
-        .reminder-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; border: 1px solid #eee; border-radius: 5px; margin-bottom: 10px; background: #f7fafc; }
-        .done-btn { background: #48bb78; padding: 5px 10px; }
-        .sync-btn { background: #ed8936; margin-top: 10px; }
-        #notification { position: fixed; top: 20px; right: 20px; background: #48bb78; color: white; padding: 15px; border-radius: 5px; display: none; z-index: 1000; }
-        .history { margin-top: 20px; padding: 15px; background: #e6fffa; border-radius: 5px; }
+        body { 
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+            margin: 0; 
+            padding: 15px; 
+            color: #333; 
+            font-size: 16px; 
+            overflow-x: hidden; 
+        }
+        .container { 
+            max-width: 100%; 
+            margin: 0 auto; 
+            background: white; 
+            border-radius: 10px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2); 
+            padding: 20px; 
+        }
+        h1 { 
+            text-align: center; 
+            color: #4a5568; 
+            font-size: 1.5em; 
+            margin-bottom: 20px; 
+        }
+        .form-group { 
+            margin-bottom: 15px; 
+        }
+        label { 
+            display: block; 
+            font-weight: bold; 
+            margin-bottom: 5px; 
+            font-size: 1em; 
+        }
+        input, select, button { 
+            padding: 12px; 
+            border: 1px solid #ddd; 
+            border-radius: 5px; 
+            width: 100%; 
+            box-sizing: border-box; 
+            font-size: 1em; 
+        }
+        button { 
+            background: #667eea; 
+            color: white; 
+            cursor: pointer; 
+            border: none; 
+            transition: background 0.3s; 
+            min-height: 44px; 
+        }
+        button:hover { 
+            background: #5a67d8; 
+        }
+        .reminders-list { 
+            margin-top: 20px; 
+            max-height: 40vh; 
+            overflow-y: auto; 
+        }
+        .reminder-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 10px; 
+            border: 1px solid #eee; 
+            border-radius: 5px; 
+            margin-bottom: 10px; 
+            background: #f7fafc; 
+            font-size: 0.9em; 
+        }
+        .done-btn { 
+            background: #48bb78; 
+            padding: 8px 12px; 
+            min-height: 36px; 
+            font-size: 0.9em; 
+        }
+        .sync-btn { 
+            background: #ed8936; 
+            margin-top: 10px; 
+            width: 100%; 
+        }
+        #notification { 
+            position: fixed; 
+            top: 10px; 
+            left: 10px; 
+            right: 10px; 
+            background: #48bb78; 
+            color: white; 
+            padding: 15px; 
+            border-radius: 5px; 
+            display: none; 
+            z-index: 1000; 
+            font-size: 0.9em; 
+            text-align: center; 
+        }
+        .history { 
+            margin-top: 20px; 
+            padding: 15px; 
+            background: #e6fffa; 
+            border-radius: 5px; 
+            max-height: 20vh; 
+            overflow-y: auto; 
+        }
+        .instructions { 
+            margin-top: 10px; 
+            font-size: 0.85em; 
+            color: #666; 
+            text-align: center; 
+        }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 15px; }
+            h1 { font-size: 1.3em; }
+            button, input, select { font-size: 0.95em; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1><i class="fas fa-pills"></i> แอพแจ้งเตือนกินยาและนัดหมอ</h1>
-        <p style="text-align: center;">ตั้งค่าการแจ้งเตือนสำหรับยาและนัดหมอ ส่งออกไป Google Calendar ได้</p>
+        <p style="text-align: center; font-size: 0.9em;">ตั้งค่าการแจ้งเตือนและส่งออกไป Google Calendar</p>
         
         <!-- ฟอร์มสำหรับกรอกข้อมูล -->
         <div class="form-group">
@@ -56,6 +155,7 @@
         
         <!-- ปุ่มส่งออกไป Google Calendar -->
         <button class="sync-btn" onclick="exportToICS()"><i class="fab fa-google"></i> ส่งออกไป Google Calendar</button>
+        <p class="instructions">วิธีนำเข้า: ดาวน์โหลดไฟล์ ICS แล้วเปิดในแอพ Google Calendar หรือไปที่ Google Calendar > การตั้งค่า > นำเข้า</p>
         
         <!-- รายการ reminders -->
         <div class="reminders-list" id="remindersList"></div>
@@ -141,7 +241,6 @@
                 reminders.forEach(rem => {
                     if (!rem.done && rem.time === currentTime) {
                         showNotification(rem.name);
-                        // Auto mark done หลัง 5 นาที ถ้าไม่ interact
                         setTimeout(() => { if (!rem.done) markDone(rem.id); }, 300000);
                     }
                 });
@@ -165,21 +264,43 @@
 
         // ส่งออกเป็นไฟล์ ICS สำหรับ Google Calendar
         function exportToICS() {
-            let ics = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Medication Reminder App//TH\n';
+            let ics = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Medication Reminder App//TH
+CALSCALE:GREGORIAN
+BEGIN:VTIMEZONE
+TZID:Asia/Bangkok
+BEGIN:STANDARD
+TZOFFSETFROM:+0700
+TZOFFSETTO:+0700
+TZNAME:ICT
+DTSTART:19700101T000000
+END:STANDARD
+END:VTIMEZONE
+`;
             reminders.forEach(rem => {
                 const date = new Date();
                 const dateStr = date.toISOString().split('T')[0].replace(/-/g, '');
                 const timeStr = rem.time.replace(':', '');
-                ics += `BEGIN:VEVENT\nSUMMARY:${rem.type === 'medicine' ? 'กินยา' : rem.type === 'appointment' ? 'นัดหมอ' : 'ดื่มน้ำ'}: ${rem.name}\nDTSTART:${dateStr}T${timeStr}00\nDTEND:${dateStr}T${timeStr}30\nRRULE:FREQ=${rem.frequency.toUpperCase()}\nEND:VEVENT\n`;
+                const summary = `${rem.type === 'medicine' ? 'กินยา' : rem.type === 'appointment' ? 'นัดหมอ' : 'ดื่มน้ำ'}: ${rem.name}`;
+                ics += `BEGIN:VEVENT
+UID:${rem.id}@medreminder.app
+SUMMARY:${summary}
+DTSTART;TZID=Asia/Bangkok:${dateStr}T${timeStr}00
+DTEND;TZID=Asia/Bangkok:${dateStr}T${timeStr}30
+RRULE:FREQ=${rem.frequency.toUpperCase()}
+DTSTAMP:${new Date().toISOString().replace(/[-:]/g, '').split('.')[0]}Z
+END:VEVENT
+`;
             });
             ics += 'END:VCALENDAR';
-            const blob = new Blob([ics], { type: 'text/calendar' });
-            const url = URL.createObjectURL(blob);
+            
+            // ใช้ data URI สำหรับ Safari compatibility
+            const dataUri = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
             const a = document.createElement('a');
-            a.href = url;
+            a.href = dataUri;
             a.download = 'reminders.ics';
             a.click();
-            URL.revokeObjectURL(url);
         }
 
         // Initialize
